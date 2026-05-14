@@ -1,21 +1,31 @@
-# React + TypeScript + Vite + shadcn/ui
+# Auth App Frontend
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+React + TypeScript + Vite frontend for the auth UI flows in this repository.
 
-## Adding components
+## Quick Start
 
-To add components to your app, run the following command:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy the environment template and adjust values if needed:
+   ```bash
+   cp .env.example .env
+   ```
+3. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+The environment template documents the required frontend variables:
+- `VITE_API_URL`
+- `VITE_ORG_NAME`
+
+## Common Commands
 
 ```bash
-npx shadcn@latest add button
-```
-
-This will place the ui components in the `src/components` directory.
-
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
 ```
