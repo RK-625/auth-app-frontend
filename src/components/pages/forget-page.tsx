@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, ArrowRight, Check } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldGroup,
   FieldLabel,
+  FieldError,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import api from "@/lib/api"
@@ -14,6 +18,7 @@ import { toast } from "sonner"
 import { AnimatePresence, motion } from "framer-motion"
 import forgotImg from "@/assets/forgot_img.png"
 import forgotImgLight from "@/assets/forgot_img_light.png"
+import { forgetSchema } from "@/lib/schemas"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -32,14 +37,23 @@ export default function ForgetPage({
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [loading, setLoading] = useState(false)
 
-  const [email, setEmail] = useState("")
-  const [otp, setOtp] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [resetToken, setResetToken] = useState("")
   const [cooldown, setCooldown] = useState(0)
+
+  const form = useForm<z.infer<typeof forgetSchema>>({
+    resolver: zodResolver(forgetSchema),
+    defaultValues: {
+      email: "",
+      otp: "",
+      password: "",
+      confirmPassword: "",
+    },
+    mode: "onChange",
+  })
+
+  const { email, otp, password, confirmPassword } = form.watch()
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -49,11 +63,11 @@ export default function ForgetPage({
     return () => clearInterval(timer)
   }, [cooldown])
 
-  const isMatching = password === confirmPassword && password !== ""
-  const validPassword = password.length >= 6 && password.length <= 15
-
   const handleStep1 = async (e: React.FormEvent) => {
     e.preventDefault()
+    const isValid = await form.trigger("email")
+    if (!isValid) return
+
     setLoading(true)
     try {
       await api.post("/auth/forget/email", { email })
@@ -82,6 +96,9 @@ export default function ForgetPage({
 
   const handleStep2 = async (e: React.FormEvent) => {
     e.preventDefault()
+    const isValid = await form.trigger("otp")
+    if (!isValid) return
+
     setLoading(true)
     try {
       const res = await api.post("/auth/forget/otp", { email, otp })
@@ -99,6 +116,9 @@ export default function ForgetPage({
 
   const handleStep3 = async (e: React.FormEvent) => {
     e.preventDefault()
+    const isValid = await form.trigger(["password", "confirmPassword"])
+    if (!isValid) return
+
     setLoading(true)
     try {
       await api.post("/auth/forget/reset", {
@@ -226,18 +246,18 @@ export default function ForgetPage({
                       id="forget-email"
                       type="email"
                       placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      {...form.register("email")}
                       required
                       autoComplete="email"
                       autoFocus
                       className="minimal-input h-12"
                     />
+                    <FieldError errors={[form.formState.errors.email]} />
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={!email || loading}
+                      disabled={!email || !!form.formState.errors.email || loading}
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
@@ -271,18 +291,22 @@ export default function ForgetPage({
                       type="text"
                       placeholder="000000"
                       className="text-center text-lg font-mono tracking-[0.3em] minimal-input h-14"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      {...form.register("otp", {
+                        onChange: (e) => {
+                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6)
+                        },
+                      })}
                       required
                       maxLength={6}
                       autoFocus
                       autoComplete="one-time-code"
                     />
+                    <FieldError errors={[form.formState.errors.otp]} />
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={otp.length !== 6 || loading}
+                      disabled={otp.length !== 6 || !!form.formState.errors.otp || loading}
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
@@ -324,8 +348,7 @@ export default function ForgetPage({
                         id="forget-password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your new password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        {...form.register("password")}
                         required
                         autoComplete="new-password"
                         autoFocus
@@ -341,12 +364,12 @@ export default function ForgetPage({
                       </button>
                     </div>
                     <div className="min-h-[22px] pt-1.5">
-                      {password.length > 0 && (
+                      {password && password.length > 0 && (
                         <p className={cn(
                           "text-[11px] font-bold transition-colors",
-                          validPassword ? "text-emerald-500" : "text-muted-foreground/60"
+                          !form.formState.errors.password ? "text-emerald-500" : "text-muted-foreground/60"
                         )}>
-                          {validPassword ? "✓ Strong enough" : password.length < 6 ? `${6 - password.length} more characters needed` : "Too long (max 15)"}
+                          {!form.formState.errors.password ? "✓ Strong enough" : password.length < 6 ? `${6 - password.length} more characters needed` : "Too long (max 15)"}
                         </p>
                       )}
                     </div>
@@ -360,8 +383,7 @@ export default function ForgetPage({
                         id="forget-confirm"
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm your new password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        {...form.register("confirmPassword")}
                         required
                         autoComplete="new-password"
                         className="pr-10 minimal-input h-12"
@@ -376,17 +398,19 @@ export default function ForgetPage({
                       </button>
                     </div>
                     <div className="min-h-[22px] pt-1.5">
-                      {confirmPassword.length > 0 && !isMatching && (
-                        <p className="text-[11px] font-bold text-destructive">
-                          Passwords don&apos;t match
-                        </p>
-                      )}
+                      <FieldError errors={[form.formState.errors.confirmPassword]} />
                     </div>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={!validPassword || !isMatching || loading}
+                      disabled={
+                        !!form.formState.errors.password ||
+                        !!form.formState.errors.confirmPassword ||
+                        !password ||
+                        !confirmPassword ||
+                        loading
+                      }
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
