@@ -203,10 +203,12 @@ export default function LoginForm({
                 <Button
                   type="submit"
                   disabled={!form.formState.isValid || loading}
+                  loading={loading}
+                  loadingLabel="Logging in..."
                   size="lg"
                   className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                 >
-                  {loading ? "Logging in..." : "Log in"}
+                  Log in
                 </Button>
               </motion.div>
 

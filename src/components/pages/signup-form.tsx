@@ -19,6 +19,7 @@ import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
 import signupImg from "@/assets/signup_img.png"
 import signupImgLight from "@/assets/signup_img_light.jpeg"
 import { signupSchema } from "@/lib/schemas"
+import { maskEmail } from "@/lib/privacy"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -262,10 +263,12 @@ export function SignupForm({
                     <Button
                       type="submit"
                       disabled={!email || !!form.formState.errors.email || loading}
+                      loading={loading}
+                      loadingLabel="Sending..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Sending..." : "Create account"}
+                      Create account
                     </Button>
                   </motion.div>
                 </FieldGroup>
@@ -282,7 +285,7 @@ export function SignupForm({
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-black tracking-tighter">Check your email</h1>
                   <p className="text-sm text-muted-foreground flex items-center gap-1.5 flex-wrap">
-                    Code sent to <span className="font-bold text-primary">{email}</span>
+                    Code sent to <span className="font-bold text-primary">{maskEmail(email)}</span>
                     <button
                       type="button"
                       onClick={handleStep2Back}
@@ -319,10 +322,12 @@ export function SignupForm({
                     <Button
                       type="submit"
                       disabled={(otp?.length || 0) !== 6 || !!form.formState.errors.otp || loading}
+                      loading={loading}
+                      loadingLabel="Verifying..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Verifying..." : "Verify code"}
+                      Verify code
                     </Button>
                   </motion.div>
                   <button
@@ -439,10 +444,12 @@ export function SignupForm({
                         !form.watch("confirmPassword") ||
                         loading
                       }
+                      loading={loading}
+                      loadingLabel="Creating..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Creating..." : "Set password"}
+                      Set password
                     </Button>
                   </motion.div>
                 </FieldGroup>

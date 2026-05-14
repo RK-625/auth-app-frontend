@@ -19,6 +19,7 @@ import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
 import forgotImg from "@/assets/forgot_img.png"
 import forgotImgLight from "@/assets/forgot_img_light.png"
 import { forgetSchema } from "@/lib/schemas"
+import { maskEmail } from "@/lib/privacy"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -258,10 +259,12 @@ export default function ForgetPage({
                     <Button
                       type="submit"
                       disabled={!email || !!form.formState.errors.email || loading}
+                      loading={loading}
+                      loadingLabel="Sending..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Sending..." : "Send reset code"}
+                      Send reset code
                     </Button>
                   </motion.div>
                 </FieldGroup>
@@ -278,7 +281,7 @@ export default function ForgetPage({
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-black tracking-tighter">Check your email</h1>
                   <p className="text-sm text-muted-foreground">
-                    Code sent to <span className="font-bold text-primary">{email}</span>
+                    Code sent to <span className="font-bold text-primary">{maskEmail(email)}</span>
                   </p>
                 </div>
                 <FieldGroup className="gap-6">
@@ -307,10 +310,12 @@ export default function ForgetPage({
                     <Button
                       type="submit"
                       disabled={(otp?.length || 0) !== 6 || !!form.formState.errors.otp || loading}
+                      loading={loading}
+                      loadingLabel="Verifying..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Verifying..." : "Verify code"}
+                      Verify code
                     </Button>
                   </motion.div>
                   <button
@@ -411,10 +416,12 @@ export default function ForgetPage({
                         !confirmPassword ||
                         loading
                       }
+                      loading={loading}
+                      loadingLabel="Updating..."
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >
-                      {loading ? "Updating..." : "Reset password"}
+                      Reset password
                     </Button>
                   </motion.div>
                 </FieldGroup>
