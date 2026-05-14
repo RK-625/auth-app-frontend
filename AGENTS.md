@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is a Vite + React + TypeScript frontend. Application entry points live in `src/main.tsx` and `src/App.tsx`. Route-facing screens are under `src/components/pages/`, shared UI primitives are in `src/components/ui/`, and app-level providers and route guards live in `src/components/`. API and validation utilities are kept in `src/lib/`. Static images and branding assets are stored in `src/assets/`; public files belong in `public/`.
+This repository is a Vite + React + TypeScript frontend. Application entry points live in `src/main.tsx` and `src/App.tsx`. Route-facing screens are under `src/components/pages/`, shared UI primitives are in `src/components/ui/`, and app-level providers and route guards live in `src/components/`. API and validation utilities are kept in `src/lib/`. OTP entry for signup/reset is standardized through the reusable `src/components/ui/OtpInput.tsx` component. Static images and branding assets are stored in `src/assets/`; public files belong in `public/`.
 
 ## Build, Test, and Development Commands
 - `npm run dev` - start the local Vite dev server.

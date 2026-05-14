@@ -20,6 +20,7 @@ import signupImg from "@/assets/signup_img.png"
 import signupImgLight from "@/assets/signup_img_light.jpeg"
 import { signupSchema } from "@/lib/schemas"
 import { maskEmail } from "@/lib/privacy"
+import { OtpInput } from "@/components/ui/OtpInput"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -42,6 +43,7 @@ export function SignupForm({
   const [cooldown, setCooldown] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [otpValue, setOtpValue] = useState("")
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -116,6 +118,8 @@ export function SignupForm({
   }
 
   const handleStep2Back = () => {
+    setOtpValue("")
+    form.setValue("otp", "", { shouldValidate: true })
     setStep(1)
   }
 
@@ -301,27 +305,25 @@ export function SignupForm({
                     <FieldLabel htmlFor="signup-otp" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
                       Verification code
                     </FieldLabel>
-                    <Input
-                      id="signup-otp"
-                      type="text"
-                      placeholder="000000"
-                      className="text-center text-lg font-mono tracking-[0.3em] minimal-input h-14"
-                      {...form.register("otp", {
-                        onChange: (e) => {
-                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6)
-                        },
-                      })}
-                      required
-                      maxLength={6}
-                      autoFocus
-                      autoComplete="one-time-code"
+                    <OtpInput
+                      key={`signup-otp-${step}`}
+                      disabled={loading}
+                      error={!!form.formState.errors.otp}
+                      onChange={(value) => {
+                        setOtpValue(value)
+                        form.setValue("otp", value, { shouldValidate: true })
+                      }}
+                      onComplete={(value) => {
+                        setOtpValue(value)
+                        form.setValue("otp", value, { shouldValidate: true })
+                      }}
                     />
                     <FieldError errors={[form.formState.errors.otp]} />
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={(otp?.length || 0) !== 6 || !!form.formState.errors.otp || loading}
+                      disabled={otpValue.length !== 6 || !!form.formState.errors.otp || loading}
                       loading={loading}
                       loadingLabel="Verifying..."
                       size="lg"

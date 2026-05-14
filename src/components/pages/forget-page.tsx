@@ -20,6 +20,7 @@ import forgotImg from "@/assets/forgot_img.png"
 import forgotImgLight from "@/assets/forgot_img_light.png"
 import { forgetSchema } from "@/lib/schemas"
 import { maskEmail } from "@/lib/privacy"
+import { OtpInput } from "@/components/ui/OtpInput"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -42,6 +43,7 @@ export default function ForgetPage({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [resetToken, setResetToken] = useState("")
   const [cooldown, setCooldown] = useState(0)
+  const [otpValue, setOtpValue] = useState("")
 
   const form = useForm<z.infer<typeof forgetSchema>>({
     resolver: zodResolver(forgetSchema),
@@ -289,27 +291,25 @@ export default function ForgetPage({
                     <FieldLabel htmlFor="forget-otp" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
                       Reset code
                     </FieldLabel>
-                    <Input
-                      id="forget-otp"
-                      type="text"
-                      placeholder="000000"
-                      className="text-center text-lg font-mono tracking-[0.3em] minimal-input h-14"
-                      {...form.register("otp", {
-                        onChange: (e) => {
-                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6)
-                        },
-                      })}
-                      required
-                      maxLength={6}
-                      autoFocus
-                      autoComplete="one-time-code"
+                    <OtpInput
+                      key={`forget-otp-${step}`}
+                      disabled={loading}
+                      error={!!form.formState.errors.otp}
+                      onChange={(value) => {
+                        setOtpValue(value)
+                        form.setValue("otp", value, { shouldValidate: true })
+                      }}
+                      onComplete={(value) => {
+                        setOtpValue(value)
+                        form.setValue("otp", value, { shouldValidate: true })
+                      }}
                     />
                     <FieldError errors={[form.formState.errors.otp]} />
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={(otp?.length || 0) !== 6 || !!form.formState.errors.otp || loading}
+                      disabled={otpValue.length !== 6 || !!form.formState.errors.otp || loading}
                       loading={loading}
                       loadingLabel="Verifying..."
                       size="lg"
