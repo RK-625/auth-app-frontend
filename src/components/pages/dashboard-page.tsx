@@ -38,6 +38,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { PasswordChangeSection } from "@/components/pages/password-change-section"
+import { AccountDeletionSection } from "@/components/pages/account-deletion-section"
+import { SessionManagementSection } from "@/components/pages/session-management-section"
 
 export default function DashboardPage({
   className,
@@ -85,11 +88,11 @@ export default function DashboardPage({
             Audit Logs
           </Link>
           <Link
-            to="#"
+            to="/admin/users"
             className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
           >
             <ShieldCheck className="size-4" />
-            Security
+            Admin Users
           </Link>
           
           <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/40 mb-3 mt-8 px-3">Account</div>
@@ -376,6 +379,11 @@ export default function DashboardPage({
                              <div className="text-sm font-bold">High Sensitivity</div>
                           </div>
                        </div>
+                    </CardContent>
+                    <CardContent className="pt-0">
+                      <SessionManagementSection />
+                      <PasswordChangeSection />
+                      <AccountDeletionSection />
                     </CardContent>
                  </Card>
               </motion.div>

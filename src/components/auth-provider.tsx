@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
-import api, { setAccessToken as setApiAccessToken } from "@/lib/api";
+import api, { getAccessToken, setAccessToken as setApiAccessToken } from "@/lib/api";
 import { toastApiError } from "@/lib/toast-api-error";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth-context";
@@ -8,6 +8,7 @@ import type { User } from "@/components/auth-context";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const res = await api.post("/auth/refresh");
           if (res.data && res.data.accessToken) {
              setApiAccessToken(res.data.accessToken);
+             setAccessToken(res.data.accessToken);
              if (res.data.user && isMounted) {
                 setUser(res.data.user);
              }
@@ -40,6 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Silent failure on bootstrap if refresh token is invalid/expired
           if (isMounted) {
             setApiAccessToken(null);
+            setAccessToken(null);
             setUser(null);
           }
        } finally {
@@ -57,6 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const handleUnauthorized = () => {
       setApiAccessToken(null);
+      setAccessToken(null);
       setUser(null);
       navigate("/login", { replace: true });
     };
@@ -65,9 +69,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => window.removeEventListener("auth:unauthorized", handleUnauthorized);
   }, [navigate]);
 
-  const login = useCallback((accessToken: string, userData: User) => {
-    setApiAccessToken(accessToken);
+  const setSession = useCallback((token: string, userData: User) => {
+    setApiAccessToken(token);
+    setAccessToken(token);
     setUser(userData);
+  }, []);
+
+  const clearSession = useCallback(() => {
+    setApiAccessToken(null);
+    setAccessToken(null);
+    setUser(null);
   }, []);
 
   const logout = useCallback(async (redirectTo: string = "/login") => {
@@ -76,19 +87,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       toastApiError(error)
     } finally {
-      setApiAccessToken(null);
-      setUser(null);
+      clearSession();
       navigate(redirectTo, { replace: true });
     }
-  }, [navigate]);
+  }, [clearSession, navigate]);
 
   const contextValue = useMemo(() => ({
     user,
+    accessToken,
+    isLoaded: !isLoading,
+    isSignedIn: !!user,
     isAuthenticated: !!user,
     isLoading,
-    login,
+    setSession,
+    clearSession,
+    login: setSession,
     logout
-  }), [user, isLoading, login, logout]);
+  }), [user, accessToken, isLoading, setSession, clearSession, logout]);
+
+  useEffect(() => {
+    setAccessToken(getAccessToken());
+  }, []);
 
   return (
     <AuthContext.Provider value={contextValue}>

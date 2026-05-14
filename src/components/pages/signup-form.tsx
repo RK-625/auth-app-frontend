@@ -124,6 +124,10 @@ export function SignupForm({
     setStep(1)
   }
 
+  const handleStep3Back = () => {
+    setStep(2)
+  }
+
   const handleStep3 = async (e: React.FormEvent) => {
     e.preventDefault()
     const isValid = await form.trigger(["password", "confirmPassword"])
@@ -354,8 +358,16 @@ export function SignupForm({
               >
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-black tracking-tighter">Set your password</h1>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                     Create a strong password for your account
+                    <button
+                      type="button"
+                      onClick={handleStep3Back}
+                      className="inline-flex items-center justify-center rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                      title="Go back"
+                    >
+                      <PencilLine className="size-3.5" />
+                    </button>
                   </p>
                 </div>
                 <FieldGroup className="gap-6">

@@ -1,0 +1,55 @@
+# AuthKit for Java — AI Agent Integration Guide
+
+## What This Is
+Self-hosted Spring Boot 3.x authentication backend consumed by this frontend.
+Default dev backend: `http://localhost:8083`
+API base: `/api/v1`
+
+## Quick Setup (Backend)
+1. Clone backend repository.
+2. Configure datasource, JWT/refresh-cookie settings, mail/OTP settings, and allowed frontend origin.
+3. Run backend (typically on port `8083`).
+4. Frontend should set `VITE_API_URL=http://localhost:8083` (frontend normalizes to `/api/v1`).
+
+## Authentication Flow
+- `POST /api/v1/auth/login`  
+  Request: `{ email, password }`  
+  Response: `{ accessToken, user }`
+- `POST /api/v1/auth/refresh` (uses HttpOnly refresh cookie)  
+  Response: `{ accessToken, user }`
+- `POST /api/v1/auth/logout`  
+  Response: `204 No Content`
+
+## Registration Flow (3 Steps)
+1. `POST /api/v1/auth/signup/request` with `{ email }` to send OTP.
+2. `POST /api/v1/auth/signup/verifyotp` with `{ email, otp }` to receive a short-lived signup token.
+3. `POST /api/v1/auth/signup/verifytoken` with `{ email, token, password }` to complete signup.
+
+## Forgot Password Flow (3 Steps)
+1. `POST /api/v1/auth/forget/email` with `{ email }` to send OTP.
+2. `POST /api/v1/auth/forget/otp` with `{ email, otp }` to verify OTP and get reset token.
+3. `POST /api/v1/auth/forget/reset` with `{ email, token, newPassword }` to reset password.
+
+## User & Session Endpoints
+- `PUT /api/v1/user/password` with `{ currentPassword, newPassword }`
+- `GET /api/v1/user/sessions`
+- `DELETE /api/v1/user/sessions/{jti}` (revoke one session)
+- `DELETE /api/v1/user/sessions` (revoke all other sessions)
+- `DELETE /api/v1/user/me` (self account deletion)
+
+## Admin Endpoints
+- `GET /api/v1/admin/users`
+- `DELETE /api/v1/root/delete/{userId}`
+
+## Frontend Integration Rules
+- Store access token **in memory only** (React/provider state), not `localStorage`.
+- Refresh token stays in secure HttpOnly cookie (`withCredentials: true`).
+- On `401`: call `/auth/refresh`, retry original request once, clear session and redirect to login if refresh fails.
+- Preserve original protected route and return user there after successful login.
+
+## OAuth2 Redirect Handling
+After OAuth provider callback, frontend lands at `/oauth2/redirect/` and calls `/auth/refresh` to hydrate app session from cookie.
+
+## Error Shape
+Backend error payload is expected as:
+`{ status, error, message, path, timestamp }`

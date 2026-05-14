@@ -15,6 +15,15 @@ export const loginSchema = z.object({
   password: passwordSchema,
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: passwordSchema,
+  newPassword: passwordSchema,
+  confirmNewPassword: z.string().min(1, "Please confirm your new password"),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "Passwords don't match",
+  path: ["confirmNewPassword"],
+});
+
 export const signupSchema = z.object({
   email: emailSchema,
   otp: z.string().length(6, "Code must be 6 digits").optional().or(z.literal("")),

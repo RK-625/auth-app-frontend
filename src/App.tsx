@@ -5,6 +5,7 @@ import HomePage from "@/components/pages/home-page"
 import LoginForm from "@/components/pages/login-form"
 import { SignupForm } from "@/components/pages/signup-form"
 import ForgetPage from "@/components/pages/forget-page"
+import OAuth2RedirectPage from "@/components/pages/oauth2-redirect-page"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -12,7 +13,10 @@ import { ModeToggle } from "@/components/mode-toggle"
 import DashboardPage from "@/components/pages/dashboard-page"
 import { ProtectedRoute } from "@/components/protected-route"
 import { PublicRoute } from "@/components/public-route"
+import { RoleProtectedRoute } from "@/components/role-protected-route"
 import { ParticleBackground } from "@/components/particle-background"
+import AdminUsersPage from "@/components/pages/admin-users-page"
+import ForbiddenPage from "@/components/pages/forbidden-page"
 
 const pageTransition: HTMLMotionProps<"div"> = {
   initial: { opacity: 0, scale: 0.98, filter: "blur(8px)" },
@@ -83,12 +87,42 @@ function App() {
                     } 
                   />
                   <Route 
+                    path="/forgot-password" 
+                    element={
+                      <PublicRoute>
+                        <ForgetPage />
+                      </PublicRoute>
+                    } 
+                  />
+                  <Route
+                    path="/oauth2/redirect/"
+                    element={<OAuth2RedirectPage />}
+                  />
+                  <Route 
                     path="/dashboard" 
                     element={
                       <ProtectedRoute>
                         <DashboardPage />
                       </ProtectedRoute>
                     } 
+                  />
+                  <Route
+                    path="/admin/users"
+                    element={
+                      <ProtectedRoute>
+                        <RoleProtectedRoute requiredRole="ROLE_ADMIN">
+                          <AdminUsersPage />
+                        </RoleProtectedRoute>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/403"
+                    element={
+                      <ProtectedRoute>
+                        <ForbiddenPage />
+                      </ProtectedRoute>
+                    }
                   />
                 </Routes>
               </motion.div>

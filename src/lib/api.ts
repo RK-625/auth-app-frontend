@@ -31,8 +31,16 @@ export const setAccessToken = (token: string | null) => {
 
 export const getAccessToken = () => inMemoryAccessToken;
 
+const rawApiBaseUrl = import.meta.env.VITE_API_URL as string | undefined;
+const normalizedApiBaseUrl = rawApiBaseUrl?.replace(/\/$/, "");
+const apiBaseUrl = normalizedApiBaseUrl
+  ? normalizedApiBaseUrl.endsWith("/api/v1")
+    ? normalizedApiBaseUrl
+    : `${normalizedApiBaseUrl}/api/v1`
+  : "/api/v1";
+
 const api = axios.create({
-  baseURL: "/api/v1", // Using Vite proxy or standard relative path
+  baseURL: apiBaseUrl,
   withCredentials: true, // Crucial for Refresh Token (Stateful HttpOnly cookie)
   headers: {
     "Content-Type": "application/json",
@@ -86,7 +94,7 @@ api.interceptors.response.use(
       try {
         // Silently trigger refresh session
         const refreshRes = await axios.post(
-          "/api/v1/auth/refresh",
+          `${apiBaseUrl}/auth/refresh`,
           {},
           { withCredentials: true }
         );

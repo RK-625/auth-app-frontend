@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, ArrowRight } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -25,6 +25,10 @@ import loginImg from "@/assets/login_img.png"
 import loginImgLight from "@/assets/login_img_light.jpeg"
 
 type LoginFormValues = z.infer<typeof loginSchema>
+type LoginState = {
+  error?: string
+  from?: { pathname?: string; search?: string; hash?: string }
+}
 
 export default function LoginForm({
   className,
@@ -32,6 +36,8 @@ export default function LoginForm({
 }: React.ComponentProps<"div">) {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const locationState = location.state as LoginState | null
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -54,7 +60,14 @@ export default function LoginForm({
       const { accessToken, user } = res.data
       login(accessToken, user)
       toast.success("Identity verified")
-      navigate("/dashboard")
+      const fromPath = locationState?.from?.pathname
+      const fromSearch = locationState?.from?.search ?? ""
+      const fromHash = locationState?.from?.hash ?? ""
+      const redirectTo =
+        fromPath && fromPath !== "/login"
+          ? `${fromPath}${fromSearch}${fromHash}`
+          : "/dashboard"
+      navigate(redirectTo, { replace: true })
     } catch (error) {
       toastApiError(error)
     } finally {
@@ -135,6 +148,9 @@ export default function LoginForm({
                   Create an account
                 </Link>
               </p>
+              {typeof locationState?.error === "string" && (
+                <p className="text-sm text-destructive">{locationState.error}</p>
+              )}
             </div>
 
             <FieldGroup className="gap-6">
@@ -192,7 +208,7 @@ export default function LoginForm({
                 <FieldError errors={[form.formState.errors.password]} />
                 <div className="flex justify-end mt-2">
                   <Link
-                    to="/forget"
+                    to="/forgot-password"
                     className="text-[11px] font-semibold text-primary transition-colors hover:underline underline-offset-4"
                   >
                     Forgot password?

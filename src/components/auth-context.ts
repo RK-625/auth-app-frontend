@@ -10,8 +10,13 @@ interface User {
 
 interface AuthContextType {
   user: User | null
+  accessToken: string | null
+  isLoaded: boolean
+  isSignedIn: boolean
   isAuthenticated: boolean
   isLoading: boolean
+  setSession: (accessToken: string, user: User) => void
+  clearSession: () => void
   login: (accessToken: string, user: User) => void
   logout: (redirectTo?: string) => Promise<void>
 }

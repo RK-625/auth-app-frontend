@@ -1,12 +1,13 @@
-import { Navigate } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/components/auth-context"
 import { motion } from "framer-motion"
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth()
+  const { user, isLoaded } = useAuth()
+  const location = useLocation()
 
   // Wait until auth state is resolved to prevent flashing the login screen
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
         <div className="relative">
@@ -24,7 +25,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace state={{ from: location }} />
   }
 
   return <>{children}</>
