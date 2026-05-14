@@ -87,8 +87,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(async (redirectTo: string = "/login") => {
     try {
       await api.post("/auth/logout");
-    } catch (e) {
-      console.error("Logout failed", e);
+    } catch {
+      // Error handled by global interceptor, silent log for debugging if needed
     } finally {
       setApiAccessToken(null);
       setUser(null);

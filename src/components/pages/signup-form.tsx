@@ -60,8 +60,7 @@ export function SignupForm({
       toast.success("Verification code sent")
       setStep(2)
       setCooldown(60)
-    } catch (error) {
-      console.error("Signup error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)
@@ -74,8 +73,8 @@ export function SignupForm({
       await api.post("/auth/signup/request", { email })
       toast.success("Code resent")
       setCooldown(60)
-    } catch (error) {
-      console.error("OTP Resend failed:", error)
+    } catch {
+      // Handled globally
     } finally {
       setLoading(false)
     }
@@ -91,8 +90,7 @@ export function SignupForm({
         setStep(3)
         toast.success("Email verified")
       }
-    } catch (error) {
-      console.error("Signup error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)
@@ -115,8 +113,7 @@ export function SignupForm({
       })
       toast.success("Account created")
       navigate("/login")
-    } catch (error) {
-      console.error("Signup error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)

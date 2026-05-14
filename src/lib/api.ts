@@ -103,24 +103,29 @@ api.interceptors.response.use(
       }
     }
 
-    // Global Error Handling
+    // Global Error Handling & Sanitization (VULN-001 & VULN-002)
     if (error.response && error.response.data) {
       const apiError = error.response.data;
-      if (apiError.message) {
-        // Map message to toast notification
-        if (error.response.status === 429) {
-           toast.error("Too Many Requests", {
-              description: apiError.message,
-           });
-        } else {
-           toast.error(apiError.error || "Error", {
-              description: apiError.message,
-           });
-        }
+      const statusCode = error.response.status;
+
+      // Sanitization: Never show raw backend errors in UI
+      let sanitizedMessage = "An unexpected error occurred. Please try again.";
+      let sanitizedTitle = "Error";
+
+      if (statusCode === 429) {
+        sanitizedTitle = "Too Many Requests";
+        sanitizedMessage = "You've made too many requests. Please wait a moment.";
+      } else if (statusCode >= 400 && statusCode < 500) {
+        sanitizedTitle = apiError.error || "Request Failed";
+        sanitizedMessage = apiError.message || "Please check your input and try again.";
       }
+
+      toast.error(sanitizedTitle, {
+        description: sanitizedMessage,
+      });
     } else {
       toast.error("Network Error", {
-        description: "Could not connect to the server.",
+        description: "Could not connect to the server. Please check your connection.",
       });
     }
 

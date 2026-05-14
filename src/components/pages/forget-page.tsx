@@ -60,8 +60,7 @@ export default function ForgetPage({
       toast.success("Reset code sent")
       setStep(2)
       setCooldown(60)
-    } catch (error) {
-      console.error("Forget password error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)
@@ -74,8 +73,8 @@ export default function ForgetPage({
       await api.post("/auth/forget/email", { email })
       toast.success("Code resent")
       setCooldown(60)
-    } catch (error) {
-      console.error("OTP Resend failed:", error)
+    } catch {
+      // Handled globally
     } finally {
       setLoading(false)
     }
@@ -91,8 +90,7 @@ export default function ForgetPage({
         toast.success("Code verified")
         setStep(3)
       }
-    } catch (error) {
-      console.error("Forget password error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)
@@ -111,8 +109,7 @@ export default function ForgetPage({
       })
       toast.success("Password updated")
       navigate("/login")
-    } catch (error) {
-      console.error("Forget password error:", error)
+    } catch {
       // Handled globally
     } finally {
       setLoading(false)

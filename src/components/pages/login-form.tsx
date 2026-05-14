@@ -38,8 +38,7 @@ export default function LoginForm({
       login(accessToken, user)
       toast.success("Identity verified")
       navigate("/dashboard")
-    } catch (error) {
-      console.error("Login submission error:", error)
+    } catch {
       // Errors handled by global interceptor
     } finally {
       setLoading(false)
