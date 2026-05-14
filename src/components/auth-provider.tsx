@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
 import api, { setAccessToken as setApiAccessToken } from "@/lib/api";
+import { toastApiError } from "@/lib/toast-api-error";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth-context";
 import type { User } from "@/components/auth-context";
@@ -72,8 +73,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(async (redirectTo: string = "/login") => {
     try {
       await api.post("/auth/logout");
-    } catch {
-      // Error handled by global interceptor, silent log for debugging if needed
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setApiAccessToken(null);
       setUser(null);

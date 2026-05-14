@@ -21,6 +21,7 @@ import signupImgLight from "@/assets/signup_img_light.jpeg"
 import { signupSchema } from "@/lib/schemas"
 import { maskEmail } from "@/lib/privacy"
 import { OtpInput } from "@/components/ui/OtpInput"
+import { toastApiError } from "@/lib/toast-api-error"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -77,8 +78,8 @@ export function SignupForm({
       toast.success("Verification code sent")
       setStep(2)
       setCooldown(60)
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -90,8 +91,8 @@ export function SignupForm({
       await api.post("/auth/signup/request", { email })
       toast.success("Code resent")
       setCooldown(60)
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -110,8 +111,8 @@ export function SignupForm({
         setStep(3)
         toast.success("Email verified")
       }
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -138,8 +139,8 @@ export function SignupForm({
       })
       toast.success("Account created")
       navigate("/login")
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }

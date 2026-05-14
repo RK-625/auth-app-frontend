@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
-import { toast } from "sonner";
+import { toastApiError } from "@/lib/toast-api-error";
 
 // In-memory token storage (Hybrid Session Strategy requirement)
 let inMemoryAccessToken: string | null = null;
@@ -49,18 +49,6 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-// Whitelist of safe error messages that can be displayed to the user
-const SAFE_ERROR_MESSAGES = [
-  "Invalid email or password",
-  "User already exists",
-  "Invalid or expired token",
-  "Account is locked",
-  "Please verify your email",
-];
-
-const GENERIC_4XX_MESSAGE = "The request could not be processed. Please check your input.";
-const GENERIC_5XX_MESSAGE = "A server error occurred. Please try again later.";
 
 // Response Interceptor: Handle 401 Auto-Refresh & Global Errors
 api.interceptors.response.use(
@@ -129,37 +117,7 @@ api.interceptors.response.use(
       }
     }
 
-    // Global Error Handling & Sanitization (VULN-001)
-    if (error.response) {
-      const statusCode = error.response.status;
-      const apiError = error.response.data || {};
-      
-      let displayMessage = GENERIC_4XX_MESSAGE;
-      let displayTitle = "Error";
-
-      if (statusCode === 429) {
-        displayTitle = "Too Many Requests";
-        displayMessage = "You've made too many requests. Please wait a moment.";
-      } else if (statusCode >= 400 && statusCode < 500) {
-        displayTitle = "Request Failed";
-        // Check if the backend message is in our safe whitelist
-        if (apiError.message && SAFE_ERROR_MESSAGES.includes(apiError.message)) {
-          displayMessage = apiError.message;
-        }
-      } else if (statusCode >= 500) {
-        displayTitle = "Server Error";
-        displayMessage = GENERIC_5XX_MESSAGE;
-      }
-
-      toast.error(displayTitle, {
-        description: displayMessage,
-      });
-    } else {
-      toast.error("Network Error", {
-        description: "Could not connect to the server. Please check your connection.",
-      });
-    }
-
+    toastApiError(error);
     return Promise.reject(error);
   }
 );

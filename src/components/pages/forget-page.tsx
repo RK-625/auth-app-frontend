@@ -21,6 +21,7 @@ import forgotImgLight from "@/assets/forgot_img_light.png"
 import { forgetSchema } from "@/lib/schemas"
 import { maskEmail } from "@/lib/privacy"
 import { OtpInput } from "@/components/ui/OtpInput"
+import { toastApiError } from "@/lib/toast-api-error"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
@@ -77,8 +78,8 @@ export default function ForgetPage({
       toast.success("Reset code sent")
       setStep(2)
       setCooldown(60)
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -90,8 +91,8 @@ export default function ForgetPage({
       await api.post("/auth/forget/email", { email })
       toast.success("Code resent")
       setCooldown(60)
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -110,8 +111,8 @@ export default function ForgetPage({
         toast.success("Code verified")
         setStep(3)
       }
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
@@ -132,8 +133,8 @@ export default function ForgetPage({
       })
       toast.success("Password updated")
       navigate("/login")
-    } catch {
-      // Handled globally
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }

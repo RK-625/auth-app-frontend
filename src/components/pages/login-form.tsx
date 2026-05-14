@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import api from "@/lib/api"
 import { useAuth } from "@/components/auth-context"
+import { toastApiError } from "@/lib/toast-api-error"
 import { toast } from "sonner"
 import loginImg from "@/assets/login_img.png"
 import loginImgLight from "@/assets/login_img_light.jpeg"
@@ -54,8 +55,8 @@ export default function LoginForm({
       login(accessToken, user)
       toast.success("Identity verified")
       navigate("/dashboard")
-    } catch {
-      // Errors handled by global interceptor
+    } catch (error) {
+      toastApiError(error)
     } finally {
       setLoading(false)
     }
