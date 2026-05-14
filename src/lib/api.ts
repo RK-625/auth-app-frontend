@@ -1,12 +1,19 @@
 import axios from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { toast } from "sonner";
 
 // In-memory token storage (Hybrid Session Strategy requirement)
 let inMemoryAccessToken: string | null = null;
 let isRefreshing = false;
-let failedQueue: any[] = [];
+type RetryableRequestConfig = AxiosRequestConfig & { _retry?: boolean };
+type QueueEntry = {
+  resolve: (token: string | null) => void;
+  reject: (error: unknown) => void;
+};
 
-const processQueue = (error: any, token: string | null = null) => {
+let failedQueue: QueueEntry[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -43,15 +50,28 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Whitelist of safe error messages that can be displayed to the user
+const SAFE_ERROR_MESSAGES = [
+  "Invalid email or password",
+  "User already exists",
+  "Invalid or expired token",
+  "Account is locked",
+  "Please verify your email",
+];
+
+const GENERIC_4XX_MESSAGE = "The request could not be processed. Please check your input.";
+const GENERIC_5XX_MESSAGE = "A server error occurred. Please try again later.";
+
 // Response Interceptor: Handle 401 Auto-Refresh & Global Errors
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config as RetryableRequestConfig | undefined;
 
     // Handle 401 Unauthorized for Auto-Refresh
     if (
       error.response?.status === 401 &&
+      originalRequest &&
       !originalRequest._retry &&
       !originalRequest.url?.includes("/auth/login")
     ) {
@@ -61,7 +81,10 @@ api.interceptors.response.use(
         })
           .then((token) => {
             originalRequest._retry = true; // Fix: Prevent infinite retry loop
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            originalRequest.headers = {
+              ...originalRequest.headers,
+              Authorization: `Bearer ${token}`,
+            };
             return api(originalRequest);
           })
           .catch((err) => {
@@ -85,7 +108,10 @@ api.interceptors.response.use(
           setAccessToken(accessToken);
           processQueue(null, accessToken);
           // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          originalRequest.headers = {
+            ...originalRequest.headers,
+            Authorization: `Bearer ${accessToken}`,
+          };
           return api(originalRequest);
         } else {
           // Fix: Handle Hanging Queue by treating missing token as an error
@@ -103,25 +129,30 @@ api.interceptors.response.use(
       }
     }
 
-    // Global Error Handling & Sanitization (VULN-001 & VULN-002)
-    if (error.response && error.response.data) {
-      const apiError = error.response.data;
+    // Global Error Handling & Sanitization (VULN-001)
+    if (error.response) {
       const statusCode = error.response.status;
-
-      // Sanitization: Never show raw backend errors in UI
-      let sanitizedMessage = "An unexpected error occurred. Please try again.";
-      let sanitizedTitle = "Error";
+      const apiError = error.response.data || {};
+      
+      let displayMessage = GENERIC_4XX_MESSAGE;
+      let displayTitle = "Error";
 
       if (statusCode === 429) {
-        sanitizedTitle = "Too Many Requests";
-        sanitizedMessage = "You've made too many requests. Please wait a moment.";
+        displayTitle = "Too Many Requests";
+        displayMessage = "You've made too many requests. Please wait a moment.";
       } else if (statusCode >= 400 && statusCode < 500) {
-        sanitizedTitle = apiError.error || "Request Failed";
-        sanitizedMessage = apiError.message || "Please check your input and try again.";
+        displayTitle = "Request Failed";
+        // Check if the backend message is in our safe whitelist
+        if (apiError.message && SAFE_ERROR_MESSAGES.includes(apiError.message)) {
+          displayMessage = apiError.message;
+        }
+      } else if (statusCode >= 500) {
+        displayTitle = "Server Error";
+        displayMessage = GENERIC_5XX_MESSAGE;
       }
 
-      toast.error(sanitizedTitle, {
-        description: sanitizedMessage,
+      toast.error(displayTitle, {
+        description: displayMessage,
       });
     } else {
       toast.error("Network Error", {

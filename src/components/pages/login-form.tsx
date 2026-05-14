@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import api from "@/lib/api"
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/components/auth-context"
 import { toast } from "sonner"
 import loginImg from "@/assets/login_img.png"
 import loginImgLight from "@/assets/login_img_light.jpeg"

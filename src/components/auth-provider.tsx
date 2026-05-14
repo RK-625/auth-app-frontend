@@ -1,24 +1,9 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import type { ReactNode } from "react";
 import api, { setAccessToken as setApiAccessToken } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  image?: string;
-  roles: { name: string }[];
-}
-
-interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (accessToken: string, user: User) => void;
-  logout: (redirectTo?: string) => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from "@/components/auth-context";
+import type { User } from "@/components/auth-context";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -50,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUser(res.data.user);
              }
           }
-       } catch (e) {
+       } catch {
           // Silent failure on bootstrap if refresh token is invalid/expired
           if (isMounted) {
             setApiAccessToken(null);
@@ -109,12 +94,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };

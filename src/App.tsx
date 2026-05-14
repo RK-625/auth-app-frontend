@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
 import { cn } from "@/lib/utils"
 import HomePage from "@/components/pages/home-page"
 import LoginForm from "@/components/pages/login-form"
@@ -14,7 +14,7 @@ import { ProtectedRoute } from "@/components/protected-route"
 import { PublicRoute } from "@/components/public-route"
 import { ParticleBackground } from "@/components/particle-background"
 
-const pageTransition = {
+const pageTransition: HTMLMotionProps<"div"> = {
   initial: { opacity: 0, scale: 0.98, filter: "blur(8px)" },
   animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
   exit: { opacity: 0, scale: 1.02, filter: "blur(8px)" },

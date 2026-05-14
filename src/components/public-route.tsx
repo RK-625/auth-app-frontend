@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/components/auth-provider";
-import { ReactNode } from "react";
+import { useAuth } from "@/components/auth-context";
+import type { ReactNode } from "react";
 
 /**
  * PublicRoute component

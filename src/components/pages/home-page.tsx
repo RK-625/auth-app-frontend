@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, LogOut, LayoutDashboard } from "lucide-react"
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/components/auth-context"
 
 export default function HomePage({ className, ...props }: React.ComponentProps<"div">) {
   const { isAuthenticated, user, logout } = useAuth();

@@ -15,14 +15,14 @@ import {
 import { Input } from "@/components/ui/input"
 import api from "@/lib/api"
 import { toast } from "sonner"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
 import forgotImg from "@/assets/forgot_img.png"
 import forgotImgLight from "@/assets/forgot_img_light.png"
 import { forgetSchema } from "@/lib/schemas"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
-const stepTransition = {
+const stepTransition: HTMLMotionProps<"form"> = {
   initial: { opacity: 0, x: 16 },
   animate: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: -16 },
@@ -306,7 +306,7 @@ export default function ForgetPage({
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
                       type="submit"
-                      disabled={otp.length !== 6 || !!form.formState.errors.otp || loading}
+                      disabled={(otp?.length || 0) !== 6 || !!form.formState.errors.otp || loading}
                       size="lg"
                       className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
                     >

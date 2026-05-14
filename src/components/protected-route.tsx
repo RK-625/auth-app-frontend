@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom"
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/components/auth-context"
 import { motion } from "framer-motion"
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
