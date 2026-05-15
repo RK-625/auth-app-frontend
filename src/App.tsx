@@ -1,22 +1,31 @@
+import { lazy, Suspense } from "react"
 import { Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
 import { cn } from "@/lib/utils"
-import HomePage from "@/components/pages/home-page"
-import LoginForm from "@/components/pages/login-form"
-import { SignupForm } from "@/components/pages/signup-form"
-import ForgetPage from "@/components/pages/forget-page"
-import OAuth2RedirectPage from "@/components/pages/oauth2-redirect-page"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
-import DashboardPage from "@/components/pages/dashboard-page"
 import { ProtectedRoute } from "@/components/protected-route"
 import { PublicRoute } from "@/components/public-route"
 import { RoleProtectedRoute } from "@/components/role-protected-route"
 import { ParticleBackground } from "@/components/particle-background"
-import AdminUsersPage from "@/components/pages/admin-users-page"
-import ForbiddenPage from "@/components/pages/forbidden-page"
+import { AuthLoadingScreen } from "@/components/auth-loading-screen"
+
+const HomePage = lazy(() => import("@/components/pages/home-page"))
+const LoginForm = lazy(() => import("@/components/pages/login-form"))
+const SignupForm = lazy(() =>
+  import("@/components/pages/signup-form").then((module) => ({
+    default: module.SignupForm,
+  }))
+)
+const ForgetPage = lazy(() => import("@/components/pages/forget-page"))
+const OAuth2RedirectPage = lazy(
+  () => import("@/components/pages/oauth2-redirect-page")
+)
+const DashboardPage = lazy(() => import("@/components/pages/dashboard-page"))
+const AdminUsersPage = lazy(() => import("@/components/pages/admin-users-page"))
+const ForbiddenPage = lazy(() => import("@/components/pages/forbidden-page"))
 
 const pageTransition: HTMLMotionProps<"div"> = {
   initial: { opacity: 0, scale: 0.98, filter: "blur(8px)" },
@@ -60,71 +69,73 @@ function App() {
                 {...pageTransition} 
                 className={cn("w-full", isDashboard && "h-screen")}
               >
-                <Routes location={location}>
-                  <Route path="/" element={<HomePage />} />
-                  <Route 
-                    path="/login" 
-                    element={
-                      <PublicRoute>
-                        <LoginForm />
-                      </PublicRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/signup" 
-                    element={
-                      <PublicRoute>
-                        <SignupForm />
-                      </PublicRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/forget" 
-                    element={
-                      <PublicRoute>
-                        <ForgetPage />
-                      </PublicRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/forgot-password" 
-                    element={
-                      <PublicRoute>
-                        <ForgetPage />
-                      </PublicRoute>
-                    } 
-                  />
-                  <Route
-                    path="/oauth2/redirect/"
-                    element={<OAuth2RedirectPage />}
-                  />
-                  <Route 
-                    path="/dashboard" 
-                    element={
-                      <ProtectedRoute>
-                        <DashboardPage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route
-                    path="/admin/users"
-                    element={
-                      <ProtectedRoute>
-                        <RoleProtectedRoute requiredRole="ROLE_ADMIN">
-                          <AdminUsersPage />
-                        </RoleProtectedRoute>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/403"
-                    element={
-                      <ProtectedRoute>
-                        <ForbiddenPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Routes>
+                <Suspense fallback={<AuthLoadingScreen message="Loading page..." />}>
+                  <Routes location={location}>
+                    <Route path="/" element={<HomePage />} />
+                    <Route 
+                      path="/login" 
+                      element={
+                        <PublicRoute>
+                          <LoginForm />
+                        </PublicRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/signup" 
+                      element={
+                        <PublicRoute>
+                          <SignupForm />
+                        </PublicRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/forget" 
+                      element={
+                        <PublicRoute>
+                          <ForgetPage />
+                        </PublicRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/forgot-password" 
+                      element={
+                        <PublicRoute>
+                          <ForgetPage />
+                        </PublicRoute>
+                      } 
+                    />
+                    <Route
+                      path="/oauth2/redirect/"
+                      element={<OAuth2RedirectPage />}
+                    />
+                    <Route 
+                      path="/dashboard" 
+                      element={
+                        <ProtectedRoute>
+                          <DashboardPage />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route
+                      path="/admin/users"
+                      element={
+                        <ProtectedRoute>
+                          <RoleProtectedRoute requiredRole="ROLE_ADMIN">
+                            <AdminUsersPage />
+                          </RoleProtectedRoute>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/403"
+                      element={
+                        <ProtectedRoute>
+                          <ForbiddenPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </Suspense>
               </motion.div>
             </AnimatePresence>
           </main>

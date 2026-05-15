@@ -212,8 +212,8 @@ export default function DashboardPage({
                           </CardTitle>
                        </CardHeader>
                        <CardContent>
-                          <div className="text-3xl font-black tracking-tighter">02</div>
-                          <p className="text-[10px] text-muted-foreground/60 font-medium mt-1">Devices currently active</p>
+                          <div className="text-3xl font-black tracking-tighter">01</div>
+                          <p className="text-[10px] text-muted-foreground/60 font-medium mt-1">Current secure session</p>
                        </CardContent>
                     </Card>
                  </motion.div>

@@ -32,10 +32,9 @@ API base: `/api/v1`
 
 ## User & Session Endpoints
 - `PUT /api/v1/user/password` with `{ currentPassword, newPassword }`
-- `GET /api/v1/user/sessions`
-- `DELETE /api/v1/user/sessions/{jti}` (revoke one session)
-- `DELETE /api/v1/user/sessions` (revoke all other sessions)
 - `DELETE /api/v1/user/me` (self account deletion)
+
+Session listing and revocation are staged in the frontend while the backend is stateless JWT only. Do not call `/api/v1/user/sessions` endpoints from the frontend until backend JTI/session persistence is implemented.
 
 ## Admin Endpoints
 - `GET /api/v1/admin/users`

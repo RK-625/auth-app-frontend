@@ -6,6 +6,28 @@ import { defineConfig } from "vite"
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) {
+            return
+          }
+
+          if (
+            id.includes("react") ||
+            id.includes("react-dom") ||
+            id.includes("react-router-dom") ||
+            id.includes("framer-motion") ||
+            id.includes("lucide-react") ||
+            id.includes("radix-ui")
+          ) {
+            return "vendor"
+          }
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

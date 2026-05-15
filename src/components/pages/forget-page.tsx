@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
+  FieldError,
+  FieldErrorSlot,
   FieldGroup,
   FieldLabel,
-  FieldError,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -270,9 +271,9 @@ export default function ForgetPage({
                       autoFocus
                       className="minimal-input h-12"
                     />
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.email]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -329,9 +330,9 @@ export default function ForgetPage({
                         form.setValue("otp", value, { shouldValidate: true })
                       }}
                     />
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.otp]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -403,7 +404,7 @@ export default function ForgetPage({
                         {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                       </button>
                     </div>
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       {password && password.length > 0 && (
                         <p className={cn(
                           "text-[11px] font-bold transition-colors",
@@ -412,7 +413,7 @@ export default function ForgetPage({
                           {!form.formState.errors.password ? "✓ Strong enough" : password.length < 6 ? `${6 - password.length} more characters needed` : "Too long (max 15)"}
                         </p>
                       )}
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="forget-confirm" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
@@ -437,9 +438,9 @@ export default function ForgetPage({
                         {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                       </button>
                     </div>
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.confirmPassword]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button

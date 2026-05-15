@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
-import api, { setAccessToken as setApiAccessToken } from "@/lib/api";
+import api, {
+  AUTH_TOKEN_REFRESHED_EVENT,
+  setAccessToken as setApiAccessToken,
+  type AuthTokenRefreshedEvent,
+} from "@/lib/api";
 import { toastApiError } from "@/lib/toast-api-error";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth-context";
@@ -68,6 +72,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     window.addEventListener("auth:unauthorized", handleUnauthorized);
     return () => window.removeEventListener("auth:unauthorized", handleUnauthorized);
   }, [navigate]);
+
+  useEffect(() => {
+    const handleTokenRefreshed = (event: Event) => {
+      const { accessToken: refreshedToken } = (event as AuthTokenRefreshedEvent).detail;
+      setAccessToken(refreshedToken);
+    };
+
+    window.addEventListener(AUTH_TOKEN_REFRESHED_EVENT, handleTokenRefreshed);
+    return () => window.removeEventListener(AUTH_TOKEN_REFRESHED_EVENT, handleTokenRefreshed);
+  }, []);
 
   const setSession = useCallback((token: string, userData: User) => {
     setApiAccessToken(token);

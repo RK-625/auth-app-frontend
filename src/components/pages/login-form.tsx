@@ -12,6 +12,7 @@ import { InteractiveLogo } from "@/components/ui/logo"
 import {
   Field,
   FieldError,
+  FieldErrorSlot,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -179,9 +180,9 @@ export default function LoginForm({
                   autoComplete="email"
                   className="minimal-input h-12"
                 />
-                <div className="min-h-[22px] pt-1.5">
+                <FieldErrorSlot>
                   <FieldError errors={[form.formState.errors.email]} />
-                </div>
+                </FieldErrorSlot>
               </Field>
 
               <Field>
@@ -217,9 +218,9 @@ export default function LoginForm({
                     )}
                   </button>
                 </div>
-                <div className="min-h-[22px] pt-1.5">
+                <FieldErrorSlot>
                   <FieldError errors={[form.formState.errors.password]} />
-                </div>
+                </FieldErrorSlot>
                 <div className="flex justify-end mt-2">
                   <Link
                     to="/forgot-password"

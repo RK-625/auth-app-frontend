@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
+  FieldError,
+  FieldErrorSlot,
   FieldGroup,
   FieldLabel,
-  FieldError,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -270,9 +271,9 @@ export function SignupForm({
                       autoFocus
                       className="minimal-input h-12"
                     />
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.email]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -329,9 +330,9 @@ export function SignupForm({
                         form.setValue("otp", value, { shouldValidate: true })
                       }}
                     />
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.otp]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -407,7 +408,7 @@ export function SignupForm({
                         )}
                       </button>
                     </div>
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       {password && password.length > 0 && (
                         <p
                           className={cn(
@@ -424,7 +425,7 @@ export function SignupForm({
                               : "Too long (max 15)"}
                         </p>
                       )}
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="signup-confirm" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
@@ -453,9 +454,9 @@ export function SignupForm({
                         )}
                       </button>
                     </div>
-                    <div className="min-h-[22px] pt-1.5">
+                    <FieldErrorSlot>
                       <FieldError errors={[form.formState.errors.confirmPassword]} />
-                    </div>
+                    </FieldErrorSlot>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button

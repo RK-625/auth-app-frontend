@@ -222,11 +222,25 @@ function FieldError({
   )
 }
 
+function FieldErrorSlot({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="field-error-slot"
+      className={cn("min-h-8 pt-1.5", className)}
+      {...props}
+    />
+  )
+}
+
 export {
   Field,
   FieldLabel,
   FieldDescription,
   FieldError,
+  FieldErrorSlot,
   FieldGroup,
   FieldLegend,
   FieldSeparator,

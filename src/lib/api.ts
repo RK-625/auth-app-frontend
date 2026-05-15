@@ -13,6 +13,17 @@ type QueueEntry = {
 
 let failedQueue: QueueEntry[] = [];
 
+export const AUTH_TOKEN_REFRESHED_EVENT = "auth:token-refreshed";
+export type AuthTokenRefreshedEvent = CustomEvent<{ accessToken: string }>;
+
+const dispatchTokenRefreshed = (accessToken: string) => {
+  window.dispatchEvent(
+    new CustomEvent(AUTH_TOKEN_REFRESHED_EVENT, {
+      detail: { accessToken },
+    })
+  );
+};
+
 const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -104,6 +115,7 @@ api.interceptors.response.use(
         const { accessToken } = refreshRes.data;
         if (accessToken) {
           setAccessToken(accessToken);
+          dispatchTokenRefreshed(accessToken);
           processQueue(null, accessToken);
           // Retry original request with new token
           originalRequest.headers = {
