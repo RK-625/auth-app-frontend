@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
-import api, { getAccessToken, setAccessToken as setApiAccessToken } from "@/lib/api";
+import api, { setAccessToken as setApiAccessToken } from "@/lib/api";
 import { toastApiError } from "@/lib/toast-api-error";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth-context";
@@ -104,10 +104,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login: setSession,
     logout
   }), [user, accessToken, isLoading, setSession, clearSession, logout]);
-
-  useEffect(() => {
-    setAccessToken(getAccessToken());
-  }, []);
 
   return (
     <AuthContext.Provider value={contextValue}>

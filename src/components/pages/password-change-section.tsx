@@ -25,7 +25,7 @@ export function PasswordChangeSection() {
       newPassword: "",
       confirmNewPassword: "",
     },
-    mode: "onChange",
+    mode: "onBlur",
   })
 
   const onSubmit = async (data: ChangePasswordValues) => {

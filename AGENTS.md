@@ -26,6 +26,12 @@ Do not hardcode secrets in source files. Frontend environment values belong in `
 
 API base URL resolution for Axios is env-first via `VITE_API_URL` and normalized to include `/api/v1` when needed; fallback remains local `/api/v1`. Keep refresh/login/session flows consistent with `src/lib/api.ts` and `src/components/auth-provider.tsx`.
 
+Auth route guards use `src/components/auth-loading-screen.tsx` for bootstrap/loading states. Do not return `null` from public/protected auth guards during session resolution; render the shared loading screen so refresh/logout transitions never leave only the particle background visible.
+
+Design-system defaults carry product styling: `src/components/ui/button.tsx` owns pill-shaped buttons and brand-magenta focus/glow treatment; `src/components/ui/card.tsx` exposes `variant="glass"` for thin-glass surfaces. Avoid reimplementing these styles page-by-page, avoid hardcoded neutral palettes on auth screens, and keep microcopy contrast at `text-muted-foreground/70` or stronger when it conveys meaningful information.
+
+Login redirects may preserve a protected route via `location.state.from`, but the final redirect path must be sanitized to an internal single-slash path before calling `navigate`.
+
 ## AI Agent Integration Note
 The repository root now includes `llms.txt`, a concise AI-consumable backend integration guide (auth flow, signup/reset steps, token/cookie strategy, session/admin endpoints, setup expectations, and error shape). Keep this file aligned with real backend contracts whenever endpoint names or payloads change.
 

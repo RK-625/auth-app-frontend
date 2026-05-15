@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "@/lib/api"
 import { useAuth } from "@/components/auth-context"
+import { AuthLoadingScreen } from "@/components/auth-loading-screen"
 
 type ApiErrorData = {
   message?: string
@@ -58,14 +59,5 @@ export default function OAuth2RedirectPage() {
     }
   }, [login, navigate])
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="relative">
-        <div className="size-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          Completing sign in...
-        </p>
-      </div>
-    </div>
-  )
+  return <AuthLoadingScreen message="Completing sign in..." />
 }

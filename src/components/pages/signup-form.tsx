@@ -13,6 +13,7 @@ import {
   FieldError,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Card } from "@/components/ui/card"
 import api from "@/lib/api"
 import { toast } from "sonner"
 import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
@@ -54,7 +55,7 @@ export function SignupForm({
       password: "",
       confirmPassword: "",
     },
-    mode: "onChange",
+    mode: "onBlur",
   })
 
   const { email, otp, password } = form.watch()
@@ -152,10 +153,13 @@ export function SignupForm({
 
   return (
     <div className={cn("mx-auto w-full max-w-[1000px]", className)} {...props}>
-      <div className="overflow-hidden rounded-3xl glass-card md:grid md:grid-cols-2 md:min-h-[600px]">
+      <Card
+        variant="glass"
+        className="gap-0 rounded-3xl py-0 text-base md:grid md:min-h-[600px] md:grid-cols-2"
+      >
         
         {/* Left panel — visual */}
-        <div className="relative hidden md:block border-r border-border bg-zinc-100 dark:bg-zinc-950">
+        <div className="relative hidden border-r border-border bg-card/40 dark:bg-background/60 md:block">
           <img
             src={signupImg}
             alt=""
@@ -175,7 +179,7 @@ export function SignupForm({
               <InteractiveLogo />
               <Link
                 to="/"
-                className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900/10 dark:bg-white/10 px-4 py-2 text-xs font-medium text-zinc-900/90 dark:text-white/90 backdrop-blur-md transition-colors hover:bg-zinc-900/20 dark:hover:bg-white/20 border border-zinc-900/10 dark:border-white/10"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/15 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-background/25"
               >
                 Back to website
                 <ArrowRight className="size-3.5" />
@@ -183,7 +187,7 @@ export function SignupForm({
             </div>
             
             <div className="flex flex-col gap-2">
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white leading-tight">
+              <h2 className="text-3xl font-bold tracking-tight text-card-foreground leading-tight">
                 Start Your<br />
                 Journey Today
               </h2>
@@ -266,7 +270,9 @@ export function SignupForm({
                       autoFocus
                       className="minimal-input h-12"
                     />
-                    <FieldError errors={[form.formState.errors.email]} />
+                    <div className="min-h-[22px] pt-1.5">
+                      <FieldError errors={[form.formState.errors.email]} />
+                    </div>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -275,7 +281,7 @@ export function SignupForm({
                       loading={loading}
                       loadingLabel="Sending..."
                       size="lg"
-                      className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
+                      className="w-full font-bold hover:animate-glow"
                     >
                       Create account
                     </Button>
@@ -323,7 +329,9 @@ export function SignupForm({
                         form.setValue("otp", value, { shouldValidate: true })
                       }}
                     />
-                    <FieldError errors={[form.formState.errors.otp]} />
+                    <div className="min-h-[22px] pt-1.5">
+                      <FieldError errors={[form.formState.errors.otp]} />
+                    </div>
                   </Field>
                   <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
                     <Button
@@ -332,7 +340,7 @@ export function SignupForm({
                       loading={loading}
                       loadingLabel="Verifying..."
                       size="lg"
-                      className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
+                      className="w-full font-bold hover:animate-glow"
                     >
                       Verify code
                     </Button>
@@ -389,7 +397,7 @@ export function SignupForm({
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-foreground"
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/70 transition-colors hover:text-foreground"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? (
@@ -435,7 +443,7 @@ export function SignupForm({
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-foreground"
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/70 transition-colors hover:text-foreground"
                         aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                       >
                         {showConfirmPassword ? (
@@ -462,7 +470,7 @@ export function SignupForm({
                       loading={loading}
                       loadingLabel="Creating..."
                       size="lg"
-                      className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
+                      className="w-full font-bold hover:animate-glow"
                     >
                       Set password
                     </Button>
@@ -472,7 +480,7 @@ export function SignupForm({
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

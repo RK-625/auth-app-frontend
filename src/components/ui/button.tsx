@@ -6,12 +6,12 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent text-sm font-semibold whitespace-nowrap transition-all duration-[var(--duration-fast)] ease-[var(--ease-out-quart)] outline-none select-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-full border border-transparent text-sm font-semibold whitespace-nowrap transition-all duration-[var(--duration-fast)] ease-[var(--ease-out-quart)] outline-none select-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[0_1px_3px_rgba(0,0,0,0.3),0_0_24px_oklch(80%_0.16_85/0.12)] hover:brightness-110 hover:shadow-[0_1px_4px_rgba(0,0,0,0.4),0_0_32px_oklch(80%_0.16_85/0.2)] active:scale-[0.97] active:brightness-95",
+          "bg-primary text-primary-foreground shadow-[0_1px_3px_rgba(0,0,0,0.3),0_0_24px_oklch(65%_0.22_330/0.16)] hover:brightness-110 hover:shadow-[0_1px_4px_rgba(0,0,0,0.4),0_0_32px_oklch(65%_0.22_330/0.24)] active:scale-[0.97] active:brightness-95",
         outline:
           "border-border bg-card text-foreground hover:bg-secondary hover:border-border active:scale-[0.97]",
         secondary:

@@ -33,7 +33,9 @@ export const getAccessToken = () => inMemoryAccessToken;
 
 const rawApiBaseUrl = import.meta.env.VITE_API_URL as string | undefined;
 const normalizedApiBaseUrl = rawApiBaseUrl?.replace(/\/$/, "");
-const apiBaseUrl = normalizedApiBaseUrl
+const apiBaseUrl = import.meta.env.DEV
+  ? "/api/v1"
+  : normalizedApiBaseUrl
   ? normalizedApiBaseUrl.endsWith("/api/v1")
     ? normalizedApiBaseUrl
     : `${normalizedApiBaseUrl}/api/v1`

@@ -72,7 +72,7 @@ export default function DashboardPage({
         </div>
         
         <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
-          <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/40 mb-3 px-3">Identity Ops</div>
+          <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-3 px-3">Identity Ops</div>
           <Link
             to="/dashboard"
             className="flex items-center gap-3 rounded-xl bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-all duration-300 border border-primary/20 shadow-[0_0_15px_rgba(236,72,153,0.05)]"
@@ -95,7 +95,7 @@ export default function DashboardPage({
             Admin Users
           </Link>
           
-          <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/40 mb-3 mt-8 px-3">Account</div>
+          <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-3 mt-8 px-3">Account</div>
           <Link
             to="#"
             className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
@@ -131,7 +131,7 @@ export default function DashboardPage({
           <div className="flex items-center gap-4 md:gap-6">
             <div className="hidden lg:flex items-center gap-3 bg-input/30 border border-border rounded-full px-4 py-2 text-sm text-muted-foreground w-72 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40">
               <Search className="size-4 opacity-40" />
-              <input type="text" placeholder="Search events..." className="bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/40" />
+              <input type="text" placeholder="Search events..." className="bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/60" />
             </div>
             
             <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-card/40">
@@ -159,7 +159,7 @@ export default function DashboardPage({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 glass-card border-border mt-2 p-2 rounded-xl">
-                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-black uppercase text-muted-foreground/50">My Account</DropdownMenuLabel>
+                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-black uppercase text-muted-foreground/70">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem className="rounded-lg font-semibold focus:bg-primary/10 focus:text-primary cursor-pointer gap-2">
                    <Home className="size-4" /> Profile
@@ -264,11 +264,11 @@ export default function DashboardPage({
                       </CardHeader>
                       <CardContent className="space-y-6">
                          <div className="p-4 rounded-2xl bg-card/20 border border-border/50">
-                            <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/50 mb-1">Unique Identifier</div>
+                            <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-1">Unique Identifier</div>
                             <div className="text-sm font-mono break-all font-semibold opacity-80">{user?.id || "6f9a2-b8c1-4d32-9e51-f76d432"}</div>
                          </div>
                          <div className="p-4 rounded-2xl bg-card/20 border border-border/50">
-                            <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/50 mb-1">Verified Email</div>
+                            <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-1">Verified Email</div>
                             <div className="text-sm font-semibold opacity-90">{user?.email || "admin@substring.com"}</div>
                          </div>
                          <div className="flex items-center gap-4">
@@ -348,7 +348,7 @@ export default function DashboardPage({
                              <ShieldCheck className="size-5" />
                           </div>
                           <div>
-                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/50">MFA Status</div>
+                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/70">MFA Status</div>
                              <div className="text-sm font-bold">Protected</div>
                           </div>
                        </div>
@@ -357,7 +357,7 @@ export default function DashboardPage({
                              <Key className="size-5" />
                           </div>
                           <div>
-                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/50">Active Tokens</div>
+                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/70">Active Tokens</div>
                              <div className="text-sm font-bold">03 Healthy</div>
                           </div>
                        </div>
@@ -366,7 +366,7 @@ export default function DashboardPage({
                              <Lock className="size-5" />
                           </div>
                           <div>
-                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/50">Encryption</div>
+                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/70">Encryption</div>
                              <div className="text-sm font-bold">AES-256-GCM</div>
                           </div>
                        </div>
@@ -375,7 +375,7 @@ export default function DashboardPage({
                              <Activity className="size-5" />
                           </div>
                           <div>
-                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/50">Alert Policy</div>
+                             <div className="text-xs font-black uppercase tracking-widest text-muted-foreground/70">Alert Policy</div>
                              <div className="text-sm font-bold">High Sensitivity</div>
                           </div>
                        </div>

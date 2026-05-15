@@ -17,6 +17,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Card } from "@/components/ui/card"
 import api from "@/lib/api"
 import { useAuth } from "@/components/auth-context"
 import { toastApiError } from "@/lib/toast-api-error"
@@ -28,6 +29,19 @@ type LoginFormValues = z.infer<typeof loginSchema>
 type LoginState = {
   error?: string
   from?: { pathname?: string; search?: string; hash?: string }
+}
+
+function getSafeRedirectPath(state: LoginState | null) {
+  const pathname = state?.from?.pathname
+
+  if (!pathname || pathname === "/login" || !pathname.startsWith("/") || pathname.startsWith("//")) {
+    return "/dashboard"
+  }
+
+  const search = state.from?.search?.startsWith("?") ? state.from.search : ""
+  const hash = state.from?.hash?.startsWith("#") ? state.from.hash : ""
+
+  return `${pathname}${search}${hash}`
 }
 
 export default function LoginForm({
@@ -47,7 +61,7 @@ export default function LoginForm({
       email: "",
       password: "",
     },
-    mode: "onChange",
+    mode: "onBlur",
   })
 
   const onSubmit = async (data: LoginFormValues) => {
@@ -60,14 +74,7 @@ export default function LoginForm({
       const { accessToken, user } = res.data
       login(accessToken, user)
       toast.success("Identity verified")
-      const fromPath = locationState?.from?.pathname
-      const fromSearch = locationState?.from?.search ?? ""
-      const fromHash = locationState?.from?.hash ?? ""
-      const redirectTo =
-        fromPath && fromPath !== "/login"
-          ? `${fromPath}${fromSearch}${fromHash}`
-          : "/dashboard"
-      navigate(redirectTo, { replace: true })
+      navigate(getSafeRedirectPath(locationState), { replace: true })
     } catch (error) {
       toastApiError(error)
     } finally {
@@ -81,9 +88,12 @@ export default function LoginForm({
 
   return (
     <div className={cn("mx-auto w-full max-w-[1000px]", className)} {...props}>
-      <div className="overflow-hidden rounded-3xl glass-card md:grid md:grid-cols-2 md:min-h-[600px]">
+      <Card
+        variant="glass"
+        className="gap-0 rounded-3xl py-0 text-base md:grid md:min-h-[600px] md:grid-cols-2"
+      >
         {/* Left panel — visual */}
-        <div className="relative hidden md:block border-r border-border bg-zinc-100 dark:bg-zinc-950">
+        <div className="relative hidden border-r border-border bg-card/40 dark:bg-background/60 md:block">
           <img
             src={loginImg}
             alt=""
@@ -103,7 +113,7 @@ export default function LoginForm({
               <InteractiveLogo />
               <Link
                 to="/"
-                className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900/10 dark:bg-white/10 px-4 py-2 text-xs font-medium text-zinc-900/90 dark:text-white/90 backdrop-blur-md transition-colors hover:bg-zinc-900/20 dark:hover:bg-white/20 border border-zinc-900/10 dark:border-white/10"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/15 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-background/25"
               >
                 Back to website
                 <ArrowRight className="size-3.5" />
@@ -111,7 +121,7 @@ export default function LoginForm({
             </div>
 
             <div className="flex flex-col gap-2">
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white leading-tight">
+              <h2 className="text-3xl font-bold tracking-tight text-card-foreground leading-tight">
                 Capturing Moments,
                 <br />
                 Creating Memories
@@ -169,7 +179,9 @@ export default function LoginForm({
                   autoComplete="email"
                   className="minimal-input h-12"
                 />
-                <FieldError errors={[form.formState.errors.email]} />
+                <div className="min-h-[22px] pt-1.5">
+                  <FieldError errors={[form.formState.errors.email]} />
+                </div>
               </Field>
 
               <Field>
@@ -193,7 +205,7 @@ export default function LoginForm({
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-foreground"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground/70 transition-colors hover:text-foreground"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
@@ -205,7 +217,9 @@ export default function LoginForm({
                     )}
                   </button>
                 </div>
-                <FieldError errors={[form.formState.errors.password]} />
+                <div className="min-h-[22px] pt-1.5">
+                  <FieldError errors={[form.formState.errors.password]} />
+                </div>
                 <div className="flex justify-end mt-2">
                   <Link
                     to="/forgot-password"
@@ -223,7 +237,7 @@ export default function LoginForm({
                   loading={loading}
                   loadingLabel="Logging in..."
                   size="lg"
-                  className="w-full font-bold h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:animate-glow transition-all duration-300 shadow-lg shadow-primary/20"
+                  className="w-full font-bold hover:animate-glow"
                 >
                   Log in
                 </Button>
@@ -274,7 +288,7 @@ export default function LoginForm({
             </FieldGroup>
           </form>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }
