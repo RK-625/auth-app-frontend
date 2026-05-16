@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stitch Identity | Omnibus UI/UX Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       1. THEME TOKENS (Synthetic Indigo)
+       ========================================================================== */
+    :root {
+      --background: oklch(12% 0.02 285);
+      --foreground: oklch(95% 0.01 285);
+      --card: oklch(16% 0.03 285);
+      --card-foreground: oklch(95% 0.01 285);
+      --primary: oklch(65% 0.22 330);
+      --primary-foreground: oklch(10% 0.02 285);
+      --secondary: oklch(20% 0.03 285);
+      --secondary-foreground: oklch(95% 0.01 285);
+      --accent: oklch(75% 0.15 45);
+      --border: oklch(25% 0.04 285 / 0.4);
+      --input: oklch(20% 0.03 285);
+      --ring: oklch(65% 0.22 330);
+      
+      --error: oklch(62% 0.22 25);
+      --success: oklch(72% 0.18 145);
+
+      /* Typography */
+      --font-hero: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Radii */
+      --radius-xl: 1.25rem;
+      --radius-lg: 1rem;
+      --radius-md: calc(1rem - 4px);
+      --radius-sm: calc(1rem - 8px);
+
+      /* Motion */
+      --duration-fast: 200ms;
+      --duration-base: 380ms;
+      --ease-quart-out: cubic-bezier(0.165, 0.84, 0.44, 1);
+      --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      
+      /* Z-Index Hierarchy */
+      --z-bg: -10;
+      --z-base: 0;
+      --z-dropdown: 50;
+      --z-sticky: 100;
+      --z-modal: 200;
+      --z-toast: 300;
+    }
+
+    [data-theme="light"] {
+      --background: oklch(98% 0.01 285);
+      --foreground: oklch(15% 0.02 285);
+      --card: oklch(96% 0.01 285);
+      --card-foreground: oklch(15% 0.02 285);
+      --primary: oklch(60% 0.18 330);
+      --primary-foreground: oklch(98% 0.01 285);
+      --secondary: oklch(92% 0.01 285);
+      --border: oklch(85% 0.02 285);
+      --input: oklch(92% 0.01 285);
+      --error: oklch(55% 0.22 25);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE
+       ========================================================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .font-hero { font-family: var(--font-hero); }
+    code, pre, .font-mono { font-family: var(--font-mono); }
+    
+    #particle-container { position: fixed; inset: 0; z-index: var(--z-bg); pointer-events: none; }
+    canvas { width: 100%; height: 100%; }
+
+    /* ==========================================================================
+       3. LAYOUT & SIDEBAR
+       ========================================================================== */
+    .app-container { display: flex; min-height: 100vh; }
+    .sidebar {
+      position: fixed; left: 0; top: 0; bottom: 0; width: 300px;
+      background: color-mix(in oklch, var(--card) 95%, transparent);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border); padding: 2.5rem 2rem;
+      z-index: var(--z-sticky); overflow-y: auto;
+    }
+    .main-content { margin-left: 300px; padding: 4rem 5rem; flex: 1; max-width: 1300px; }
+    section { margin-bottom: 7rem; scroll-margin-top: 4rem; }
+
+    .nav-group { font-family: var(--font-hero); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; padding: 1.5rem 1rem 0.25rem; font-weight: 700; }
+    .nav-link { display: block; padding: 0.4rem 1rem; color: var(--foreground); opacity: 0.6; text-decoration: none; font-size: 0.85rem; border-radius: 0.5rem; transition: 0.2s; font-family: var(--font-body); }
+    .nav-link:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+    .nav-link.active { opacity: 1; color: var(--primary); background: color-mix(in oklch, var(--primary) 10%, transparent); font-weight: 600; }
+    .theme-switch { background: var(--secondary); border: 1px solid var(--border); color: var(--foreground); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; font-size: 0.8rem; width: 100%; margin-top: 1rem; transition: 0.2s; font-family: var(--font-body); font-weight: 600; }
+    .theme-switch:hover { border-color: var(--primary); }
+
+    /* ==========================================================================
+       4. TYPOGRAPHY & UTILS
+       ========================================================================== */
+    .display-1 { font-size: 3.5rem; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+    .section-h { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 2rem; display: flex; align-items: center; }
+    .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); margin-bottom: 0.5rem; display: block; font-family: var(--font-hero); }
+    .desc-text { font-size: 1.1rem; opacity: 0.65; max-width: 65ch; margin-bottom: 2.5rem; }
+    .glow-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 15px var(--primary); margin-right: 0.75rem; }
+    .tag { display: inline-flex; align-items: center; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; vertical-align: middle; margin-left: 0.5rem; font-family: var(--font-hero); }
+    .tag-new { background: color-mix(in oklch, var(--primary) 15%, transparent); color: var(--primary); border: 1px solid color-mix(in oklch, var(--primary) 30%, transparent); }
+
+    .dictionary-entry { background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 3rem; }
+    .entry-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--card) 50%, transparent); display: flex; align-items: center; justify-content: space-between; }
+    .entry-body { padding: 2rem; display: grid; grid-template-columns: 1fr 350px; gap: 3rem; }
+    @media (max-width: 1024px) { .entry-body { grid-template-columns: 1fr; } }
+    
+    .rules-box { font-size: 0.85rem; }
+    .rule-do { color: var(--success); font-weight: 600; margin-bottom: 0.25rem; display: block; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; }
+    .rule-dont { color: var(--error); font-weight: 600; margin-bottom: 0.25rem; display: block; margin-top: 1rem; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; }
+    .rule-text { opacity: 0.8; margin-bottom: 1rem; }
+
+    /* ==========================================================================
+       5. COMPONENT SPECS (Literals)
+       ========================================================================== */
+    .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+    .spec-panel { background: rgba(0,0,0,0.15); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border); }
+    .spec-header { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; font-family: var(--font-hero); }
+    .prop-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .prop-row:last-child { border-bottom: none; }
+    .prop-k { opacity: 0.6; font-size: 0.85rem; }
+    .prop-v { font-weight: 500; font-size: 0.85rem; font-family: var(--font-mono); }
+
+    /* Buttons */
+    .stitch-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0 1.25rem; height: 2.5rem; border-radius: 9999px;
+      font-weight: 600; font-size: 0.875rem; font-family: var(--font-body);
+      cursor: pointer; border: 1px solid transparent; outline: none;
+      transition: all var(--duration-fast) var(--ease-quart-out);
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-foreground); box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 0 24px oklch(65% 0.22 330 / 0.16); }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 24px oklch(65% 0.22 330 / 0.35); }
+    .btn-primary:active { transform: scale(0.97); filter: brightness(0.95); }
+    .btn-secondary { background: transparent; color: var(--foreground); border-color: var(--border); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: oklch(65% 0.22 330 / 0.4); }
+    .btn-ghost { background: transparent; color: var(--primary); border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+    .btn-disabled { background: var(--secondary); color: var(--foreground); opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    
+    /* Inputs */
+    .input-wrapper { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; width: 100%; }
+    .field-label { font-family: var(--font-hero); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; }
+    .stitch-input {
+      width: 100%; background: color-mix(in oklch, var(--input) 50%, transparent);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 0.75rem 1rem; color: var(--foreground); font-family: var(--font-body);
+      font-size: 0.9rem; transition: all var(--duration-fast) var(--ease-quart-out); outline: none;
+    }
+    .stitch-input:focus { border-color: oklch(65% 0.22 330 / 0.6); box-shadow: 0 0 0 4px oklch(65% 0.22 330 / 0.15); background: var(--input); }
+    .stitch-input.error { border-color: oklch(62% 0.22 25 / 0.7); box-shadow: 0 0 0 4px oklch(62% 0.22 25 / 0.1); }
+    
+    /* OTP */
+    .otp-group { display: flex; gap: 0.5rem; justify-content: center; }
+    .otp-slot { width: 3rem; height: 3.5rem; border-radius: var(--radius-md); background: var(--input); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; transition: all var(--duration-fast); font-family: var(--font-hero); }
+    .otp-slot.active { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent); }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: color-mix(in oklch, var(--card) 65%, transparent);
+      backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 2rem; position: relative; overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .glass-panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, oklch(65% 0.22 330 / 0.05), transparent, oklch(75% 0.15 45 / 0.05)); pointer-events: none; }
+
+    /* Tables */
+    .stitch-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    .stitch-table th { padding: 1rem; border-bottom: 1px solid var(--border); opacity: 0.6; font-weight: 600; font-family: var(--font-hero); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stitch-table td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background var(--duration-fast); }
+    .stitch-table tr:hover td { background: color-mix(in oklch, var(--secondary) 50%, transparent); }
+
+    /* Split Panel */
+    .split-panel { display: grid; grid-template-columns: 1fr 1fr; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6); min-height: 420px; }
+    .split-left { background: linear-gradient(160deg, oklch(10% 0.04 285), oklch(8% 0.06 310)); padding: 2rem; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
+    .split-left-art { position: absolute; inset: 0; background: linear-gradient(135deg, oklch(15% 0.08 295), oklch(10% 0.05 310), oklch(12% 0.06 285)); display: flex; align-items: center; justify-content: center; }
+    .art-sun { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, oklch(75% 0.15 45), oklch(65% 0.22 330)); box-shadow: 0 0 60px oklch(65% 0.22 330 / 0.5), 0 0 120px oklch(65% 0.22 330 / 0.2); position: relative; top: -20px; }
+    .art-cityline { position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to top, oklch(8% 0.03 285), transparent); }
+    .split-left-caption { position: relative; z-index: 1; font-size: 1.3rem; font-weight: 700; line-height: 1.25; font-family: var(--font-hero); }
+    .split-right { background: color-mix(in oklch, var(--card) 80%, transparent); backdrop-filter: blur(40px); padding: 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+    
+    /* Stepper */
+    .stepper { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; }
+    .step-item { display: flex; align-items: center; }
+    .step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; transition: all 0.3s var(--ease-quart-out); font-family: var(--font-hero); }
+    .step-dot.completed { background: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 12px oklch(65% 0.22 330 / 0.4); }
+    .step-dot.active { background: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 0 4px oklch(65% 0.22 330 / 0.2); }
+    .step-dot.upcoming { background: var(--secondary); color: var(--foreground); opacity: 0.5; border: 1px solid var(--border); }
+    .step-line { width: 32px; height: 1px; background: var(--border); margin: 0 4px; }
+    .step-line.done { background: var(--primary); }
+
+    /* Toasts */
+    .toast-viewport { position: fixed; bottom: 2rem; right: 2rem; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+    .toast { pointer-events: auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; width: 350px; display: flex; gap: 1rem; align-items: flex-start; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); transform: translateY(100%) scale(0.9); opacity: 0; transition: all var(--duration-base) var(--ease-spring); }
+    .toast.visible { transform: translateY(0) scale(1); opacity: 1; }
+    .toast.error { border-color: color-mix(in oklch, var(--error) 40%, transparent); }
+    .toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; font-family: var(--font-hero); }
+    .toast.error .toast-icon { background: var(--error); color: white; }
+
+    /* Elevation Demo */
+    .elevation-demo { position: relative; height: 300px; perspective: 1000px; display: flex; align-items: center; justify-content: center; }
+    .layer-card { position: absolute; width: 200px; height: 120px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; transition: all 0.5s; backdrop-filter: blur(10px); font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em;}
+    .layer-bg { background: transparent; transform: translateZ(-100px) translateY(-60px); opacity: 0.3; }
+    .layer-base { background: var(--background); transform: translateZ(0) translateY(-20px); opacity: 0.6; }
+    .layer-card-ui { background: var(--card); transform: translateZ(100px) translateY(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: var(--primary); }
+
+    /* Colors / Contrast */
+    .contrast-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .contrast-pair { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
+    .contrast-chip { width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+    .contrast-ratio { font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; min-width: 50px; }
+    .badge-pass { background: oklch(72% 0.18 145 / 0.15); border-color: oklch(72% 0.18 145 / 0.3); color: oklch(72% 0.18 145); padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; border: 1px solid; font-family: var(--font-hero); }
+
+    /* Prototype Dashboard */
+    .proto-container { border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; display: grid; grid-template-columns: 240px 1fr; height: 700px; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8); position: relative; background: var(--background); }
+    .proto-sidebar { background: var(--card); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .proto-nav-item { padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: rgba(255,255,255,0.7); cursor: pointer; transition: 0.2s; font-family: var(--font-body); }
+    .proto-nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .proto-nav-item.active { background: color-mix(in oklch, var(--primary) 15%, transparent); color: var(--primary); font-weight: 500; }
+    .proto-main { padding: 2.5rem; overflow-y: auto; background: linear-gradient(to bottom, oklch(14% 0.02 285), var(--background)); }
+    .proto-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .proto-stat-card { background: color-mix(in oklch, var(--card) 60%, transparent); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; backdrop-filter: blur(20px); }
+    .metric { font-family: var(--font-hero); font-size: 2.5rem; font-weight: 500; color: var(--primary); }
+
+    /* Token Block */
+    .token-block { background: rgba(0,0,0,0.4); border-radius: var(--radius-lg); padding: 1.25rem; border: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.8; max-height: 350px; overflow-y: auto; scrollbar-width: thin; }
+    .token-key { color: oklch(75% 0.15 45); }
+    .token-val { color: oklch(75% 0.15 160); }
+    .token-comment { color: oklch(60% 0.05 285); }
+    .copy-btn { background: var(--secondary); border: 1px solid var(--border); color: var(--foreground); padding: 0.35rem 0.85rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.75rem; font-family: var(--font-body); margin-top: 0.75rem; transition: 0.2s; }
+    .copy-btn:hover { background: color-mix(in oklch, var(--card) 90%, transparent); }
+
+    /* Avatars */
+    .avatar { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; overflow: hidden; user-select: none; border-radius: 9999px; background: var(--secondary); color: var(--secondary-foreground); border: 1px solid var(--border); position: relative; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+    .avatar-fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-weight: 600; font-family: var(--font-hero); }
+    .avatar-lg { width: 40px; height: 40px; font-size: 1rem; }
+    .avatar-md { width: 32px; height: 32px; font-size: 0.8rem; }
+    .avatar-sm { width: 24px; height: 24px; font-size: 0.6rem; }
+
+    /* Badges */
+    .badge-base { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 600; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid transparent; white-space: nowrap; }
+    .badge-default { background: var(--primary); color: var(--primary-foreground); }
+    .badge-secondary { background: var(--secondary); color: var(--secondary-foreground); }
+    .badge-destructive { background: color-mix(in oklch, var(--error) 15%, transparent); color: var(--error); border-color: color-mix(in oklch, var(--error) 30%, transparent); }
+    .badge-outline { border-color: var(--border); color: var(--foreground); background: color-mix(in oklch, var(--input) 20%, transparent); }
+    
+    /* Dropdown Menus */
+    .dropdown-menu { background: color-mix(in oklch, var(--popover) 70%, transparent); backdrop-filter: blur(24px) saturate(150%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0.25rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); min-width: 200px; color: var(--popover-foreground); }
+    .dropdown-item { padding: 0.4rem 0.75rem; border-radius: calc(var(--radius-lg) - 4px); font-size: 0.8rem; font-family: var(--font-body); cursor: default; transition: 0.1s; display: flex; align-items: center; gap: 0.5rem; }
+    .dropdown-item:hover { background: color-mix(in oklch, var(--foreground) 10%, transparent); }
+    .dropdown-item.destructive { color: var(--error); }
+    .dropdown-item.destructive:hover { background: color-mix(in oklch, var(--error) 15%, transparent); }
+    .dropdown-separator { height: 1px; background: color-mix(in oklch, var(--foreground) 5%, transparent); margin: 0.25rem -0.25rem; }
+    .dropdown-label { padding: 0.4rem 0.75rem; font-size: 0.7rem; color: var(--foreground); opacity: 0.5; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Atmosphere & Loading */
+    .auth-spinner-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 3rem; background: var(--background); border-radius: var(--radius-lg); border: 1px solid var(--border); position: relative; }
+    .auth-spinner { width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid color-mix(in oklch, var(--primary) 20%, transparent); border-top-color: var(--primary); animation: spin 0.8s linear infinite; box-shadow: 0 0 20px color-mix(in oklch, var(--primary) 20%, transparent); }
+    .spinner-dot { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0.5rem; height: 0.5rem; background: var(--primary); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.5; } }
+
+    .glow-decoration-sim { position: relative; width: 100%; height: 300px; border-radius: var(--radius-lg); overflow: hidden; background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.5rem; }
+    .glow-ring { width: 6rem; height: 6rem; border-radius: 1.5rem; background: color-mix(in oklch, var(--primary) 20%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 40%, transparent); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+    .glow-ring-inner { width: 3rem; height: 3rem; border-radius: 50%; background: var(--primary); box-shadow: 0 0 40px var(--primary); }
+    .rotating-glow { position: absolute; inset: -20%; background: radial-gradient(circle at center, color-mix(in oklch, var(--primary) 15%, transparent), transparent 70%); animation: rotate-slow 15s linear infinite; }
+    @keyframes rotate-slow { from { transform: rotate(0deg) scale(1); } to { transform: rotate(360deg) scale(1.1); } }
+
+    .falling-pattern-preview { position: relative; width: 100%; height: 200px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); background: var(--background); }
+    .falling-pattern-overlay { position: absolute; inset: 0; background-image: radial-gradient(var(--primary) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.2; animation: fall 60s linear infinite; }
+    @keyframes fall { from { background-position: 0 0; } to { background-position: 0 1000px; } }
+
+    .separator-h { height: 1px; width: 100%; background: var(--border); margin: 1.5rem 0; }
+    .separator-v { width: 1px; height: 2rem; background: var(--border); margin: 0 1rem; }
+
+    /* Branding & Dashboard Shell */
+    .branding-logo { font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.875rem; color: var(--foreground); cursor: pointer; transition: transform 0.2s; }
+    .branding-logo:hover { transform: scale(1.05); }
+
+    .nav-item-dashboard { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.3s; border: 1px solid transparent; }
+    .nav-item-dashboard.active { background: color-mix(in oklch, var(--primary) 10%, transparent); color: var(--primary); border-color: color-mix(in oklch, var(--primary) 20%, transparent); box-shadow: 0 0 15px color-mix(in oklch, var(--primary) 5%, transparent); }
+    .nav-item-dashboard:not(.active):hover { background: rgba(255,255,255,0.05); color: var(--foreground); }
+
+    .stat-card { border-left: 4px solid var(--primary); transition: transform 0.3s; }
+    .stat-card:hover { transform: scale(1.02); }
+    .stat-card.indigo { border-left-color: oklch(50% 0.2 250); }
+    .stat-card.amber { border-left-color: oklch(75% 0.15 45); }
+
+    .search-pill { display: flex; align-items: center; gap: 0.75rem; background: color-mix(in oklch, var(--input) 30%, transparent); border: 1px solid var(--border); border-radius: 9999px; padding: 0.5rem 1rem; width: 280px; transition: all 0.3s; }
+    .search-pill:focus-within { ring: 2px solid color-mix(in oklch, var(--primary) 20%, transparent); border-color: color-mix(in oklch, var(--primary) 40%, transparent); }
+    .search-pill input { background: transparent; border: none; outline: none; color: var(--foreground); font-size: 0.85rem; width: 100%; }
+
+    .status-dot-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); position: relative; }
+    .status-dot-pulse::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: pulse-glow 2s ease-in-out infinite; }
+
+    /* Custom Modals & Overlays */
+    .modal-overlay { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-content { width: 100%; max-width: 450px; background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem; padding: 1.5rem; shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+
+    /* Field Layout Primitives */
+    .field-group { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
+    .field-separator { position: relative; height: 1.25rem; display: flex; align-items: center; justify-content: center; }
+    .field-separator::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: var(--border); opacity: 0.5; }
+    .field-separator-text { position: relative; z-index: 1; background: var(--background); padding: 0 0.5rem; font-size: 0.65rem; color: var(--foreground); opacity: 0.4; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- BACKGROUND -->
+  <div id="particle-container"><canvas id="canvas"></canvas></div>
+
+  <!-- TOAST PORTAL -->
+  <div class="toast-viewport" id="toastPortal"></div>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div style="margin-bottom: 1.5rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+          <div style="width:32px; height:32px; background:var(--primary); border-radius:8px; box-shadow:0 0 15px var(--primary);"></div>
+          <h2 class="font-hero" style="font-size:1.4rem; font-weight:700;">STITCH</h2>
+        </div>
+        <p style="font-size:0.7rem; opacity:0.4; font-family:var(--font-hero); text-transform:uppercase; letter-spacing:0.1em;">Omnibus Edition</p>
+      </div>
+      <nav>
+        <div class="nav-group" style="padding-top:0;">Foundation</div>
+        <a href="#overview" class="nav-link">Vision & Typography</a>
+        <a href="#branding" class="nav-link">Branding & Shell <span class="tag tag-new">Update</span></a>
+        <a href="#color" class="nav-link">Color Geometry</a>
+        <a href="#zindex" class="nav-link">Elevation & Z-Index</a>
+        
+        <div class="nav-group">Components</div>
+        <a href="#buttons" class="nav-link">Button Matrix</a>
+        <a href="#inputs" class="nav-link">Input & Form Rules <span class="tag tag-new">Update</span></a>
+        <a href="#modals" class="nav-link">Custom Overlays <span class="tag tag-new">New</span></a>
+        <a href="#avatars-badges" class="nav-link">Avatars & Badges</a>
+        <a href="#dropdowns" class="nav-link">Dropdown Menus <span class="tag tag-new">New</span></a>
+        <a href="#otp" class="nav-link">OTP Flow</a>
+        <a href="#splitpanel" class="nav-link">Split Panel Layout</a>
+        <a href="#tables" class="nav-link">Data Tables</a>
+        
+        <div class="nav-group">Feedback & Motion</div>
+        <a href="#particles" class="nav-link">Particle Engine</a>
+        <a href="#atmosphere" class="nav-link">Atmosphere & Loading <span class="tag tag-new">New</span></a>
+        <a href="#toasts" class="nav-link">API Error Toasts</a>
+        
+        <div class="nav-group">Assembly</div>
+        <a href="#prototype" class="nav-link" style="color:var(--primary); font-weight:600;">▶ Interactive Prototype</a>
+        <a href="#tokens" class="nav-link">CSS Token Export</a>
+      </nav>
+      <button class="theme-switch" id="themeBtn">☾ Switch to Morning Fog</button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- 1. OVERVIEW & TYPOGRAPHY -->
+      <section id="overview">
+        <span class="section-label">Source of Truth</span>
+        <h1 class="display-1">The Omnibus Playbook.</h1>
+        <p class="desc-text">
+          This document merges deep technical UI specifications with our "Terminal-Chic" typography strategy. 
+          It acts as the single dictionary for building the Stitch Identity frontend.
+        </p>
+
+        <div class="dictionary-entry">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Typography Strategy</h3></div>
+          <div class="entry-body">
+            <div>
+              <div style="padding:1rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div class="font-hero" style="color:var(--primary); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;">Hero / Headings / Metrics</div>
+                <div style="font-family:var(--font-hero); font-size:2.5rem; font-weight:700;">Space Grotesk</div>
+              </div>
+              <div style="padding:1rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div class="font-hero" style="color:var(--primary); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;">Body / UI / Legibility</div>
+                <div style="font-family:var(--font-body); font-size:2rem; font-weight:500;">DM Sans</div>
+              </div>
+              <div style="padding:1rem 0;">
+                <div class="font-hero" style="color:var(--primary); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;">Code / Tokens / Specs</div>
+                <div class="font-mono" style="font-size:1.5rem;">JetBrains Mono</div>
+              </div>
+            </div>
+            <div class="rules-box">
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules of Engagement</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use Space Grotesk for metrics and numbers to emphasize the technical nature of the app.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use DM Sans for all form inputs, buttons, and paragraphs to prioritize extreme legibility.</p>
+              <span class="rule-dont">✗ DON'T</span><p class="rule-text">Use Space Grotesk for paragraphs of text; it causes eye fatigue in long blocks.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW: BRANDING & SHELL -->
+      <section id="branding">
+        <h2 class="section-h"><span class="glow-dot"></span>Branding & Dashboard Shell <span class="tag tag-new">Update</span></h2>
+        <div class="spec-grid">
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Interactive Logo</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr; padding-bottom: 2rem;">
+              <div class="branding-logo">DEMO</div>
+              <p class="rule-text" style="font-size: 0.85rem; margin-top: 1rem;">The official logo uses <code>tracking-[0.2em]</code> and <code>font-bold</code>. It scales by 1.05x on hover using Framer Motion.</p>
+            </div>
+          </div>
+
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Sidebar Command Center</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr; padding-bottom: 2rem;">
+              <div style="width:240px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem; display:flex; flex-direction:column; gap:0.5rem;">
+                <div class="nav-item-dashboard active">Command Center</div>
+                <div class="nav-item-dashboard">Audit Logs</div>
+              </div>
+              <p class="rule-text" style="font-size: 0.85rem; margin-top: 1rem;">Navigation items use <code>rounded-xl</code> (0.75rem) and a 10% opacity primary background for active states.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dictionary-entry" style="margin-top:2.5rem;">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Header Elements</h3></div>
+          <div class="entry-body" style="grid-template-columns: 1fr 1fr;">
+            <div>
+              <div class="search-pill">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" placeholder="Search events...">
+              </div>
+              <p class="rule-text" style="font-size: 0.85rem; margin-top: 1rem;">Search bars use <code>bg-input/30</code> and a <code>rounded-full</code> pill shape.</p>
+            </div>
+            <div>
+              <div style="display:flex; align-items:center; gap:2rem;">
+                <div style="text-align:center;">
+                  <div class="status-dot-pulse"></div>
+                  <div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">LIVE</div>
+                </div>
+                <div style="text-align:center;">
+                   <div style="width:36px; height:36px; border-radius:50%; background:var(--background); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;">
+                      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707"></path></svg>
+                   </div>
+                   <div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">MODE</div>
+                </div>
+              </div>
+              <p class="rule-text" style="font-size: 0.85rem; margin-top: 1rem;">Header actions use 36px icon buttons with backdrop blurs.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. COLOR & CONTRAST -->
+      <section id="color">
+        <h2 class="section-h"><span class="glow-dot"></span>Color Geometry & Contrast</h2>
+        <div class="spec-grid">
+          <div>
+            <div style="display:flex; gap:1rem; margin-bottom:1rem;">
+              <div style="flex:1; height:100px; background:var(--background); border:1px solid var(--border); border-radius:var(--radius-md);"></div>
+              <div style="flex:1; height:100px; background:var(--primary); border:1px solid var(--border); border-radius:var(--radius-md);"></div>
+            </div>
+            <p class="desc-text" style="font-size:0.95rem;">OKLCH guarantees perceptual uniformity. Magenta (65% lightness) against Indigo (12% lightness).</p>
+          </div>
+          <div class="spec-panel">
+            <div class="spec-header">Contrast Matrix (WCAG)</div>
+            <div class="contrast-row">
+              <div class="contrast-pair">
+                <div class="contrast-chip" style="background:oklch(95% 0.01 285);"></div>
+                <div class="contrast-chip" style="background:oklch(12% 0.02 285);"></div>
+                <span style="font-size:0.82rem;">Foreground on Background</span>
+              </div>
+              <span class="contrast-ratio">~16.5:1</span>
+              <span class="badge-pass">PASS</span>
+            </div>
+            <div class="contrast-row">
+              <div class="contrast-pair">
+                <div class="contrast-chip" style="background:oklch(65% 0.22 330);"></div>
+                <div class="contrast-chip" style="background:oklch(12% 0.02 285);"></div>
+                <span style="font-size:0.82rem;">Primary on Background</span>
+              </div>
+              <span class="contrast-ratio">~4.8:1</span>
+              <span class="badge-pass">PASS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Z-INDEX -->
+      <section id="zindex">
+        <h2 class="section-h"><span class="glow-dot"></span>Elevation & Z-Index System</h2>
+        <div class="spec-grid">
+          <div class="elevation-demo">
+            <div class="layer-card layer-bg">Canvas Particles (z: -10)</div>
+            <div class="layer-card layer-base">Base Layout (z: 0)</div>
+            <div class="layer-card layer-card-ui">Modals / Toasts (z: 300)</div>
+          </div>
+          <div class="spec-panel">
+            <div class="spec-header">Z-Index Stack</div>
+            <div class="prop-row"><span class="prop-k">--z-bg (Particles)</span><span class="prop-v">-10</span></div>
+            <div class="prop-row"><span class="prop-k">--z-base (App Shell)</span><span class="prop-v">0</span></div>
+            <div class="prop-row"><span class="prop-k">--z-dropdown (Menus)</span><span class="prop-v">50</span></div>
+            <div class="prop-row"><span class="prop-k">--z-sticky (Sidebar/Nav)</span><span class="prop-v">100</span></div>
+            <div class="prop-row"><span class="prop-k">--z-modal (Dialogs)</span><span class="prop-v">200</span></div>
+            <div class="prop-row"><span class="prop-k">--z-toast (Sonner)</span><span class="prop-v">300</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. BUTTONS -->
+      <section id="buttons">
+        <h2 class="section-h"><span class="glow-dot"></span>Button State Matrix</h2>
+        <div class="dictionary-entry">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Primary Interaction</h3></div>
+          <div class="entry-body">
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+              <div style="text-align:center;"><button class="stitch-btn btn-primary">Default</button><div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">DEFAULT</div></div>
+              <div style="text-align:center;"><button class="stitch-btn btn-primary" style="filter:brightness(1.1); transform:translateY(-1px); box-shadow:0 4px 20px oklch(65% 0.22 330/0.35);">Hover</button><div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">HOVER</div></div>
+              <div style="text-align:center;"><button class="stitch-btn btn-primary" style="transform:scale(0.97); filter:brightness(0.95);">Active</button><div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">ACTIVE</div></div>
+              <div style="text-align:center;"><button class="stitch-btn btn-disabled">Disabled</button><div style="font-size:0.7rem; opacity:0.5; margin-top:0.5rem; font-family:var(--font-hero);">DISABLED</div></div>
+            </div>
+            <div class="rules-box">
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use <code>active:scale-[0.97]</code> for tactile click feedback.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use pill shapes (<code>9999px</code> radius) for primary calls to action.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. INPUTS & FORMS -->
+      <section id="inputs">
+        <h2 class="section-h"><span class="glow-dot"></span>Inputs & Form Validation <span class="tag-new">Update</span></h2>
+        <div class="dictionary-entry">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Text Fields & Error Slots</h3></div>
+          <div class="entry-body">
+            <div>
+              <div class="input-wrapper">
+                <label class="field-label">Email Address (Default)</label>
+                <input type="email" class="stitch-input" placeholder="dev@stitch.app">
+                <div class="field-error-slot"></div> <!-- Empty slot preserves layout height -->
+              </div>
+              <div class="input-wrapper">
+                <label class="field-label">Workspace (Error)</label>
+                <input type="text" class="stitch-input error" value="invalid!name">
+                <div class="field-error-slot">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                  Validation failed
+                </div>
+              </div>
+            </div>
+            <div class="rules-box">
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Format labels using Space Grotesk, uppercase, with 0.05em letter spacing.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use <code>FieldErrorSlot</code> (min-h-8) below inputs. This prevents the card height from shifting when an error appears.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW: CUSTOM OVERLAYS -->
+      <section id="modals">
+        <h2 class="section-h"><span class="glow-dot"></span>Custom Overlays & Modals <span class="tag tag-new">New</span></h2>
+        <div class="dictionary-entry">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Custom Dialog Pattern</h3></div>
+          <div class="entry-body">
+            <div style="position:relative; height:300px; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border);">
+              <div class="modal-overlay" style="position:absolute;">
+                <div class="modal-content">
+                  <h4 class="font-hero" style="font-size:1.1rem; margin-bottom:0.5rem;">Confirm Action</h4>
+                  <p style="font-size:0.85rem; opacity:0.6; margin-bottom:1.5rem;">Are you sure you want to proceed? This cannot be undone.</p>
+                  <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+                    <button class="stitch-btn btn-secondary" style="height:2.2rem; font-size:0.8rem;">Cancel</button>
+                    <button class="stitch-btn btn-primary" style="height:2.2rem; font-size:0.8rem; background:var(--error);">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rules-box">
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use <code>z-index: 80</code> and <code>bg-black/70</code> for modal backgrounds to create a high-contrast focus on the content.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Apply <code>backdrop-filter: blur(4px)</code> to the overlay to obscure the dashboard content while the modal is active.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW: AVATARS AND BADGES -->
+      <section id="avatars-badges">
+        <h2 class="section-h"><span class="glow-dot"></span>Avatars & Badges <span class="tag-new">New</span></h2>
+        <div class="spec-grid">
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Badges</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr; padding-bottom: 2rem;">
+              <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom: 1rem;">
+                <span class="badge-base badge-default">Default</span>
+                <span class="badge-base badge-secondary">Secondary</span>
+                <span class="badge-base badge-destructive">Destructive</span>
+                <span class="badge-base badge-outline">Outline</span>
+              </div>
+              <p class="rule-text" style="font-size: 0.85rem;">Badges use Space Grotesk, uppercase, with tight padding to serve as compact status indicators.</p>
+            </div>
+          </div>
+
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Avatars</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr; padding-bottom: 2rem;">
+              <div style="display:flex; gap:1.5rem; align-items:center; margin-bottom: 1rem;">
+                <div class="avatar avatar-lg"><div class="avatar-fallback">JD</div></div>
+                <div class="avatar avatar-md"><div class="avatar-fallback">SA</div></div>
+                <div class="avatar avatar-sm"><div class="avatar-fallback">T</div></div>
+              </div>
+              <p class="rule-text" style="font-size: 0.85rem;">Fallbacks use Space Grotesk for initials. Sizes map directly to <code>lg</code>, <code>default</code>, and <code>sm</code> props.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW: DROPDOWNS -->
+      <section id="dropdowns">
+        <h2 class="section-h"><span class="glow-dot"></span>Dropdown Menus <span class="tag-new">New</span></h2>
+        <div class="dictionary-entry">
+          <div class="entry-header">
+            <h3 class="font-hero" style="font-size:1.25rem;">Popovers & Menus</h3>
+          </div>
+          <div class="entry-body">
+            <div>
+              <div class="dropdown-menu">
+                <div style="padding:0.4rem 0.75rem; font-size:0.7rem; opacity:0.5; font-family:var(--font-hero); text-transform:uppercase;">My Account</div>
+                <div style="height:1px; background:color-mix(in oklch, var(--foreground) 5%, transparent); margin:0.25rem -0.25rem;"></div>
+                <div class="dropdown-item">Profile</div>
+                <div class="dropdown-item">Team Settings</div>
+                <div style="height:1px; background:color-mix(in oklch, var(--foreground) 5%, transparent); margin:0.25rem -0.25rem;"></div>
+                <div class="dropdown-item destructive">Log out</div>
+              </div>
+            </div>
+            <div class="rules-box">
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use extreme backdrop blur (<code>backdrop-blur-2xl</code>) to simulate frosted glass floating above the Z-0 layer.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Use the <code>destructive</code> variant for dangerous actions, which applies the Error token on hover.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. OTP FLOW -->
+      <section id="otp">
+        <h2 class="section-h"><span class="glow-dot"></span>OTP Input Validation</h2>
+        <div class="glass-panel" style="max-width: 400px;">
+          <div style="text-align:center; margin-bottom: 2rem;">
+            <h3 class="font-hero" style="font-size:1.25rem; font-weight:600; margin-bottom:0.5rem;">Check your email</h3>
+            <p style="font-size:0.85rem; opacity:0.6;">We sent a 6-digit code to dev@stitch.app</p>
+          </div>
+          <div class="otp-group" style="margin-bottom: 2rem;">
+            <div class="otp-slot">4</div>
+            <div class="otp-slot">8</div>
+            <div class="otp-slot active">|</div>
+            <div class="otp-slot" style="opacity:0.3">-</div>
+            <div class="otp-slot" style="opacity:0.3">-</div>
+            <div class="otp-slot" style="opacity:0.3">-</div>
+          </div>
+          <button class="stitch-btn btn-primary" style="width:100%; height:3rem;">Verify Code</button>
+        </div>
+      </section>
+
+      <!-- 7. SPLIT PANEL -->
+      <section id="splitpanel">
+        <h2 class="section-h"><span class="glow-dot"></span>Split Panel — Auth Layout</h2>
+        <div class="split-panel">
+          <div class="split-left">
+            <div class="split-left-art">
+              <div><div class="art-sun"></div><div class="art-cityline"></div></div>
+            </div>
+            <div class="split-left-caption">Identity infrastructure<br>that scales with your ambition.</div>
+          </div>
+          <div class="split-right">
+            <h3 class="font-hero" style="font-size:1.6rem; font-weight:700; margin-bottom:0.35rem;">Log in</h3>
+            <p style="font-size:0.85rem; opacity:0.6; margin-bottom:1.75rem;">Don't have an account? <span style="color:var(--primary); cursor:pointer;">Create an account</span></p>
+            <div class="input-wrapper"><label class="field-label">Email</label><input type="email" class="stitch-input"></div>
+            <div class="input-wrapper"><label class="field-label">Password</label><input type="password" class="stitch-input"></div>
+            <button class="stitch-btn btn-primary" style="width:100%; height:3rem;">Log in</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. DATA TABLES -->
+      <section id="tables">
+        <h2 class="section-h"><span class="glow-dot"></span>Admin Data Tables</h2>
+        <div class="glass-panel" style="padding: 1rem 0;">
+          <table class="stitch-table">
+            <thead>
+              <tr>
+                <th style="padding-left:2rem;">User ID</th>
+                <th>User</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-mono" style="padding-left:2rem; opacity:0.7; font-size:0.8rem;">usr_9a8b7c</td>
+                <td>
+                  <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <div class="avatar avatar-md"><div class="avatar-fallback">SA</div></div>
+                    <span style="font-weight:500;">admin@stitch.app</span>
+                  </div>
+                </td>
+                <td><span class="badge-base badge-default" style="background:var(--primary); color:white;">ADMIN</span></td>
+                <td><span style="color:var(--success); font-size:0.85rem;"><span class="glow-dot" style="background:var(--success); box-shadow:none;"></span>Active</span></td>
+              </tr>
+              <tr>
+                <td class="font-mono" style="padding-left:2rem; opacity:0.7; font-size:0.8rem;">usr_2d3f4g</td>
+                <td>
+                  <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <div class="avatar avatar-md"><div class="avatar-fallback">JD</div></div>
+                    <span style="font-weight:500;">dev@example.com</span>
+                  </div>
+                </td>
+                <td><span class="badge-base badge-outline">USER</span></td>
+                <td><span style="opacity:0.5; font-size:0.85rem;"><span class="glow-dot" style="background:gray; box-shadow:none;"></span>Offline</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="separator-h"></div>
+        <p class="desc-text" style="font-size:0.85rem; text-align:center;">Separators (<code>src/components/ui/separator.tsx</code>) are used to divide dense information blocks.</p>
+      </section>
+
+      <!-- NEW: ATMOSPHERE -->
+      <section id="atmosphere">
+        <h2 class="section-h"><span class="glow-dot"></span>Atmosphere & Utility <span class="tag tag-new">New</span></h2>
+        <div class="spec-grid">
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Auth Loading Screen</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr;">
+              <div class="auth-spinner-container">
+                <div class="auth-spinner"></div>
+                <div class="spinner-dot"></div>
+                <p style="font-family:var(--font-body); font-size:0.85rem; opacity:0.6; margin-top:0.5rem;">Checking session...</p>
+              </div>
+              <p class="rule-text" style="font-size:0.85rem; margin-top:1rem;">Bootstrap state uses a 3rem spinner with a 20px glow shadow and a central pulsing dot.</p>
+            </div>
+          </div>
+
+          <div class="dictionary-entry" style="margin-bottom:0;">
+            <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Glow Decoration</h3></div>
+            <div class="entry-body" style="grid-template-columns: 1fr;">
+              <div class="glow-decoration-sim">
+                <div class="rotating-glow"></div>
+                <div class="glow-ring"><div class="glow-ring-inner"></div></div>
+                <div style="position:relative; z-index:1;">
+                  <h4 class="font-hero" style="font-size:1.2rem;">Security by Design</h4>
+                  <p style="font-size:0.8rem; opacity:0.5; max-width:250px;">Advanced encryption and multi-step verification protecting your digital identity.</p>
+                </div>
+              </div>
+              <p class="rule-text" style="font-size:0.85rem; margin-top:1rem;">Empty states use a rotating radial gradient backdrop (15s linear) and a 40px bloom central orb.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dictionary-entry" style="margin-top:2.5rem;">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Falling Pattern Animation</h3></div>
+          <div class="entry-body" style="grid-template-columns: 1fr;">
+            <div class="falling-pattern-preview">
+              <div class="falling-pattern-overlay"></div>
+            </div>
+            <p class="rule-text" style="font-size:0.85rem; margin-top:1rem;">The <code>FallingPattern.tsx</code> simulates a data-stream using a 60s CSS animation that shifts the background-position vertically over a radial dot grid.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. PARTICLES -->
+      <section id="particles">
+        <h2 class="section-h"><span class="glow-dot"></span>Particle Background Engine</h2>
+        <div class="spec-grid">
+          <div class="spec-panel">
+            <div class="spec-header">Simulation Engine</div>
+            <div class="prop-row"><span class="prop-k">Canvas Context</span><span class="prop-v">2D</span></div>
+            <div class="prop-row"><span class="prop-k">Max Particles</span><span class="prop-v">70</span></div>
+            <div class="prop-row"><span class="prop-k">Particle Mix</span><span class="prop-v">Bubble 80% / Line 20%</span></div>
+            <div class="prop-row"><span class="prop-k">Velocity Range</span><span class="prop-v">±0.4px / frame</span></div>
+          </div>
+          <div>
+            <p class="desc-text" style="font-size:0.95rem;">The background is a living canvas simulation replicating <code>ParticleBackground.tsx</code>. It creates an atmosphere rather than a static design.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. TOASTS -->
+      <section id="toasts">
+        <h2 class="section-h"><span class="glow-dot"></span>API Error Toasts</h2>
+        <div class="spec-grid">
+          <div>
+            <button class="stitch-btn btn-primary" id="triggerToastBtn">Trigger Interceptor Error</button>
+            <p style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.6;">Click to simulate a 401 Unauthorized response handled by Sonner (z-index 300).</p>
+          </div>
+          <div class="spec-panel">
+            <div class="spec-header">Toast Behavior Specs</div>
+            <div class="prop-row"><span class="prop-k">Position</span><span class="prop-v">bottom-right</span></div>
+            <div class="prop-row"><span class="prop-k">Animation</span><span class="prop-v">translateY(100%) → 0</span></div>
+            <div class="prop-row"><span class="prop-k">Easing</span><span class="prop-v">Spring (0.175, 0.885...)</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. PROTOTYPE -->
+      <section id="prototype">
+        <h2 class="section-h"><span class="glow-dot"></span>Interactive Prototype Assembly</h2>
+        <p class="desc-text">This demonstrates how the specific fonts (Space Grotesk headers + DM Sans body), components, and layouts come together in a production dashboard scenario.</p>
+
+        <div class="proto-container">
+          <div class="proto-sidebar">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom: 2rem;">
+              <div style="width:24px; height:24px; background:var(--primary); border-radius:6px; box-shadow:0 0 10px var(--primary);"></div>
+              <span class="font-hero" style="font-weight:700; font-size:1.25rem;">Stitch</span>
+            </div>
+            <div class="font-hero" style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; opacity:0.4; margin-bottom:0.5rem;">Menu</div>
+            <div class="proto-nav-item active">Overview</div>
+            <div class="proto-nav-item">Users & Roles</div>
+            <div class="proto-nav-item">API Keys</div>
+            <div class="proto-nav-item">Security Logs</div>
+          </div>
+          <div class="proto-main">
+            <div class="proto-header">
+              <div>
+                <div class="font-mono" style="font-size:0.75rem; color:var(--primary); margin-bottom:0.25rem;">Production Cluster</div>
+                <h2 class="font-hero" style="font-size:2rem; font-weight:600;">System Overview</h2>
+              </div>
+              <button class="stitch-btn btn-primary">Invite User</button>
+            </div>
+            <div class="proto-stat-grid">
+              <div class="proto-stat-card">
+                <div class="font-hero" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.6; margin-bottom:0.5rem;">Total Users</div>
+                <div class="metric">12,492</div>
+                <div style="font-size:0.8rem; color:var(--success); margin-top:0.25rem;">↑ 12% this week</div>
+              </div>
+              <div class="proto-stat-card">
+                <div class="font-hero" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.6; margin-bottom:0.5rem;">Active Sessions</div>
+                <div class="metric">3,841</div>
+                <div style="font-size:0.8rem; opacity:0.5; margin-top:0.25rem;">Across 4 regions</div>
+              </div>
+            </div>
+            <div class="glass-panel" style="padding:1rem; border-radius:var(--radius-md);">
+              <div class="font-hero" style="padding: 1rem; font-size:1.1rem; font-weight:600; border-bottom:1px solid var(--border);">Recent Sign-ins</div>
+              <table class="proto-table stitch-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Email Address</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-mono" style="opacity:0.7; font-size:0.8rem;">usr_01H9</td>
+                    <td style="font-weight:500;">sarah.connor@cyber.net</td>
+                    <td><span class="glow-dot" style="background:var(--success); box-shadow:none;"></span> Success</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12. TOKEN EXPORT -->
+      <section id="tokens">
+        <h2 class="section-h"><span class="glow-dot"></span>Exportable CSS Tokens</h2>
+        <div class="token-block" id="tokenBlock">
+<span class="token-comment">/* === Stitch Identity — Omnibus Tokens === */</span>
+<span class="token-key">--background</span>:     <span class="token-val">oklch(12% 0.02 285)</span>;
+<span class="token-key">--primary</span>:        <span class="token-val">oklch(65% 0.22 330)</span>;
+<span class="token-key">--accent</span>:         <span class="token-val">oklch(75% 0.15 45)</span>;
+<span class="token-key">--error</span>:          <span class="token-val">oklch(62% 0.22 25)</span>;
+<span class="token-key">--font-hero</span>:      <span class="token-val">'Space Grotesk', system-ui, sans-serif</span>;
+<span class="token-key">--font-body</span>:      <span class="token-val">'DM Sans', system-ui, sans-serif</span>;
+<span class="token-key">--font-mono</span>:      <span class="token-val">'JetBrains Mono', monospace</span>;
+<span class="token-key">--radius-lg</span>:      <span class="token-val">1rem</span>;
+<span class="token-key">--ease-quart-out</span>: <span class="token-val">cubic-bezier(0.165, 0.84, 0.44, 1)</span>;
+        </div>
+        <button class="copy-btn" id="copyBtn">⎘ Copy all tokens</button>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       CANVAS PARTICLE ENGINE (Atmosphere)
+       ========================================================================== */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const maxParticles = 70;
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function getColors() {
+      return document.body.getAttribute('data-theme') === 'dark'
+        ? ["#ec4899","#8b5cf6","#f59e0b","#4c1d95","#831843"]
+        : ["#d946ef","#6366f1","#d97706","#818cf8","#f472b6"];
+    }
+
+    class Particle {
+      constructor() { this.init(); }
+      init() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.type = Math.random() < 0.2 ? 'line' : 'bubble';
+        this.size = Math.random() * 8 + 2;
+        this.color = getColors()[Math.floor(Math.random() * 5)];
+        this.alpha = 0;
+        this.angle = Math.random() * Math.PI * 2;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.alpha < 0.15) this.alpha += 0.002;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.init();
+      }
+      draw() {
+        ctx.beginPath(); ctx.globalAlpha = this.alpha;
+        ctx.strokeStyle = this.color; ctx.lineWidth = 1;
+        if (this.type === 'bubble') {
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        } else {
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(this.x + Math.cos(this.angle) * 10, this.y + Math.sin(this.angle) * 10);
+        }
+        ctx.stroke();
+      }
+    }
+    function initParticles() { particles = []; for (let i = 0; i < maxParticles; i++) particles.push(new Particle()); }
+    function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    window.addEventListener('resize', resize);
+    resize(); initParticles(); animateParticles();
+
+    /* ==========================================================================
+       THEME TOGGLE
+       ========================================================================== */
+    const themeBtn = document.getElementById('themeBtn');
+    themeBtn.addEventListener('click', () => {
+      const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      themeBtn.innerText = next === 'dark' ? '☾ Switch to Morning Fog' : '☀ Switch to Late Night Study';
+    });
+
+    /* ==========================================================================
+       TOAST SIMULATION
+       ========================================================================== */
+    const toastPortal = document.getElementById('toastPortal');
+    const triggerBtn = document.getElementById('triggerToastBtn');
+    triggerBtn.addEventListener('click', () => {
+      const toast = document.createElement('div');
+      toast.className = 'toast error';
+      toast.innerHTML = `<div class="toast-icon">!</div><div style="flex:1;"><div style="font-weight:600; font-size:0.85rem; margin-bottom:0.2rem; font-family:var(--font-hero);">API Error (401)</div><div style="font-size:0.8rem; opacity:0.7;">Session expired. Interceptor failed to refresh token.</div></div>`;
+      toastPortal.appendChild(toast);
+      requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('visible')));
+      setTimeout(() => { toast.classList.remove('visible'); setTimeout(() => toast.remove(), 400); }, 4000);
+    });
+
+    /* ==========================================================================
+       NAV HIGHLIGHTING
+       ========================================================================== */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { threshold: 0.2 });
+    sections.forEach(s => observer.observe(s));
+
+    /* ==========================================================================
+       COPY TOKENS
+       ========================================================================== */
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const raw = document.getElementById('tokenBlock').innerText;
+      navigator.clipboard.writeText(raw).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '✓ Copied!';
+        setTimeout(() => btn.innerText = '⎘ Copy all tokens', 2000);
+      });
+    });
+  </script>
+</body>
+</html>
