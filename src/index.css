@@ -79,6 +79,9 @@
   --radius-sm: calc(var(--radius) - 8px);
 
   --animate-glow: pulse-glow 3s ease-in-out infinite;
+  
+  /* Vertical Spine Alignment (Option 2: 1.25rem / 20px) */
+  --field-spine-indent: 1.25rem;
 }
 
 body {

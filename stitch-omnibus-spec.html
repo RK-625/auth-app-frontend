@@ -782,6 +782,21 @@
         </div>
 
         <div class="dictionary-entry" style="margin-top:2.5rem;">
+          <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Vertical Spine Alignment</h3></div>
+          <div class="entry-body" style="grid-template-columns: 1fr;">
+            <div style="padding: 2.5rem; background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); position: relative;">
+               <div style="position:absolute; top:0; bottom:0; left:1.25rem; width:1px; background:rgba(236,72,153,0.3); z-index:1;"></div>
+               <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                 <span style="padding-left:1.25rem; font-size:10px; font-weight:700; text-transform:uppercase; opacity:0.4; letter-spacing:0.1em;">Email Address</span>
+                 <div style="background:var(--input); height:3.5rem; border-radius:9999px; border:1px solid var(--border); display:flex; align-items:center; padding:0 1.25rem; color:var(--foreground); font-size:0.95rem;">user@stitch.app</div>
+                 <div style="padding-left:1.25rem; font-size:0.75rem; color:var(--error); font-weight:500;">Field is required</div>
+               </div>
+            </div>
+            <p class="rule-text" style="font-size:0.85rem; margin-top:1rem;">All form elements must synchronize to a single <b>Vertical Spine</b>. Labels, input text, and error messages use a consistent <b>1.25rem (20px)</b> horizontal offset (defined as <code>--field-spine-indent</code>).</p>
+          </div>
+        </div>
+
+        <div class="dictionary-entry" style="margin-top:2.5rem;">
           <div class="entry-header"><h3 class="font-hero" style="font-size:1.25rem;">Standard Link Interaction</h3></div>
           <div class="entry-body" style="grid-template-columns: 1fr;">
             <div style="padding: 2rem; background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); display: flex; justify-content: center;">
