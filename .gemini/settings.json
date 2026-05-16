@@ -1,0 +1,27 @@
+{
+  "skills": {
+    "disabled": [
+      "using-superpowers",
+      "verification-before-completion",
+      "dependency-manager",
+      "writing-skills",
+      "code-review-commons",
+      "dispatching-parallel-agents",
+      "security-patcher",
+      "subagent-driven-development",
+      "finishing-a-development-branch",
+      "systematic-debugging",
+      "poc",
+      "using-git-worktrees",
+      "receiving-code-review",
+      "requesting-code-review",
+      "executing-plans",
+      "brainstorming",
+      "find-skills",
+      "impeccable",
+      "test-driven-development",
+      "writing-plans",
+      "javadoc-pro"
+    ]
+  }
+}

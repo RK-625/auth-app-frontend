@@ -26,6 +26,7 @@ const OAuth2RedirectPage = lazy(
 const DashboardPage = lazy(() => import("@/components/pages/dashboard-page"))
 const AdminUsersPage = lazy(() => import("@/components/pages/admin-users-page"))
 const ForbiddenPage = lazy(() => import("@/components/pages/forbidden-page"))
+const DesignSystemPage = lazy(() => import("@/components/pages/design-system-page"))
 
 const pageTransition: HTMLMotionProps<"div"> = {
   initial: { opacity: 0, scale: 0.98, filter: "blur(8px)" },
@@ -126,6 +127,18 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+                    {import.meta.env.MODE === "development" && (
+                      <Route
+                        path="/design-system"
+                        element={
+                          <ProtectedRoute>
+                            <RoleProtectedRoute requiredRole="ROLE_ADMIN">
+                              <DesignSystemPage />
+                            </RoleProtectedRoute>
+                          </ProtectedRoute>
+                        }
+                      />
+                    )}
                     <Route
                       path="/403"
                       element={
