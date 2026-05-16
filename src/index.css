@@ -111,6 +111,17 @@ body {
   .minimal-input {
     @apply bg-input/50 border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all duration-500 rounded-xl;
   }
+
+  .link-underline-center {
+    @apply relative no-underline transition-all duration-300;
+    &::after {
+      content: '';
+      @apply absolute w-full h-[1.5px] -bottom-0.5 left-0 bg-primary scale-x-0 origin-center transition-transform duration-300 ease-out;
+    }
+    &:hover::after {
+      @apply scale-x-100;
+    }
+  }
 }
 
 @layer utilities {

@@ -154,7 +154,7 @@ export default function LoginForm({
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-primary font-semibold hover:underline underline-offset-4"
+                  className="text-primary font-semibold link-underline-center"
                 >
                   Create an account
                 </Link>
@@ -193,6 +193,12 @@ export default function LoginForm({
                   >
                     Password
                   </FieldLabel>
+                  <Link
+                    to="/forgot-password"
+                    className="text-[11px] font-semibold text-primary transition-colors hover:underline underline-offset-4"
+                  >
+                    Forgot password?
+                  </Link>
                 </div>
                 <div className="relative">
                   <Input
@@ -221,14 +227,6 @@ export default function LoginForm({
                 <FieldErrorSlot>
                   <FieldError errors={[form.formState.errors.password]} />
                 </FieldErrorSlot>
-                <div className="flex justify-end mt-2">
-                  <Link
-                    to="/forgot-password"
-                    className="text-[11px] font-semibold text-primary transition-colors hover:underline underline-offset-4"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
               </Field>
 
               <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">

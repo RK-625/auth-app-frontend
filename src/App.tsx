@@ -132,9 +132,7 @@ function App() {
                         path="/design-system"
                         element={
                           <ProtectedRoute>
-                            <RoleProtectedRoute requiredRole="ROLE_ADMIN">
-                              <DesignSystemPage />
-                            </RoleProtectedRoute>
+                            <DesignSystemPage />
                           </ProtectedRoute>
                         }
                       />
