@@ -56,7 +56,7 @@ export function SignupForm({
       password: "",
       confirmPassword: "",
     },
-    mode: "onBlur",
+    mode: "onChange",
   })
 
   const { email, otp, password } = form.watch()

@@ -56,7 +56,7 @@ export default function ForgetPage({
       password: "",
       confirmPassword: "",
     },
-    mode: "onBlur",
+    mode: "onChange",
   })
 
   const { email, otp, password, confirmPassword } = form.watch()
