@@ -251,7 +251,7 @@ export default function ForgetPage({
                   <h1 className="text-4xl font-black tracking-tighter">Reset password</h1>
                   <p className="text-sm text-muted-foreground">
                     Remember your password?{" "}
-                    <Link to="/login" className="text-primary font-semibold hover:underline underline-offset-4">
+                    <Link to="/login" className="text-primary font-semibold link-underline-center">
                       Log in
                     </Link>
                   </p>
@@ -350,7 +350,7 @@ export default function ForgetPage({
                     type="button"
                     onClick={handleResendOtp}
                     disabled={cooldown > 0 || loading}
-                    className="text-center text-xs font-bold text-muted-foreground transition-colors hover:text-primary disabled:opacity-40"
+                    className="text-center text-xs font-bold text-muted-foreground link-underline-center inline-block mx-auto disabled:opacity-40"
                   >
                     {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
                   </button>

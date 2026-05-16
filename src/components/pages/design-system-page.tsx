@@ -166,7 +166,26 @@ export default function DesignSystemPage() {
       {/* 4. DATA & STATUS */}
       <section className="space-y-8">
         <div className="space-y-1">
-          <h2 className="text-2xl font-black uppercase tracking-tight">04. Identity & Status</h2>
+          <h2 className="text-2xl font-black uppercase tracking-tight">04. Links & Interactions</h2>
+          <p className="text-sm text-muted-foreground">Standardized hover effects for text-based actions.</p>
+        </div>
+
+        <div className="flex gap-12 items-center p-8 rounded-2xl border border-border bg-card/10">
+           <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold uppercase opacity-40">Center Expand</span>
+              <a href="#" className="text-primary font-bold link-underline-center text-lg">Forgot password?</a>
+           </div>
+           <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold uppercase opacity-40">Navigation Style</span>
+              <a href="#" className="text-foreground/60 font-medium link-underline-center">Return to dashboard</a>
+           </div>
+        </div>
+      </section>
+
+      {/* 5. IDENTITY & STATUS */}
+      <section className="space-y-8">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-black uppercase tracking-tight">05. Identity & Status</h2>
           <p className="text-sm text-muted-foreground">Standardized representations for users and roles.</p>
         </div>
 

@@ -195,7 +195,7 @@ export default function LoginForm({
                   </FieldLabel>
                   <Link
                     to="/forgot-password"
-                    className="text-[11px] font-semibold text-primary transition-colors hover:underline underline-offset-4"
+                    className="text-[11px] font-semibold text-primary link-underline-center"
                   >
                     Forgot password?
                   </Link>
