@@ -241,11 +241,10 @@ export default function ForgetPage({
 
           <AnimatePresence mode="wait">
             {step === 1 && (
-              <motion.form
+              <motion.div
                 key="step1"
                 {...stepTransition}
                 className="flex flex-col gap-8"
-                onSubmit={handleStep1}
               >
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-black tracking-tighter">Reset password</h1>
@@ -256,39 +255,44 @@ export default function ForgetPage({
                     </Link>
                   </p>
                 </div>
-                <FieldGroup className="gap-6">
-                  <Field>
-                    <FieldLabel htmlFor="forget-email" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
-                      Email address
-                    </FieldLabel>
-                    <Input
-                      id="forget-email"
-                      type="email"
-                      placeholder="Enter your email"
-                      {...form.register("email")}
-                      required
-                      autoComplete="email"
-                      autoFocus
-                      className="minimal-input h-12"
-                    />
-                    <FieldErrorSlot>
-                      <FieldError errors={[form.formState.errors.email]} />
-                    </FieldErrorSlot>
-                  </Field>
-                  <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
-                    <Button
-                      type="submit"
-                      disabled={!email || !!form.formState.errors.email || loading}
-                      loading={loading}
-                      loadingLabel="Sending..."
-                      size="lg"
-                      className="w-full font-bold hover:animate-glow"
-                    >
-                      Send reset code
-                    </Button>
-                  </motion.div>
-                </FieldGroup>
-              </motion.form>
+                <form
+                  className="flex flex-col gap-8"
+                  onSubmit={handleStep1}
+                >
+                  <FieldGroup className="gap-6">
+                    <Field>
+                      <FieldLabel htmlFor="forget-email" className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/80">
+                        Email address
+                      </FieldLabel>
+                      <Input
+                        id="forget-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        {...form.register("email")}
+                        required
+                        autoComplete="email"
+                        autoFocus
+                        className="minimal-input h-12"
+                      />
+                      <FieldErrorSlot>
+                        <FieldError errors={[form.formState.errors.email]} />
+                      </FieldErrorSlot>
+                    </Field>
+                    <motion.div whileTap={{ scale: 0.98 }} className="w-full mt-2">
+                      <Button
+                        type="submit"
+                        disabled={!email || !!form.formState.errors.email || loading}
+                        loading={loading}
+                        loadingLabel="Sending..."
+                        size="lg"
+                        className="w-full font-bold hover:animate-glow"
+                      >
+                        Send reset code
+                      </Button>
+                    </motion.div>
+                  </FieldGroup>
+                </form>
+              </motion.div>
             )}
 
             {step === 2 && (
