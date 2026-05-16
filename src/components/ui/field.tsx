@@ -231,7 +231,7 @@ function FieldErrorSlot({
     <div
       data-slot="field-error-slot"
       className={cn(
-        "min-h-8 pt-1.5",
+        "min-h-8",
         "pl-[var(--field-spine-indent)]",
         className
       )}
