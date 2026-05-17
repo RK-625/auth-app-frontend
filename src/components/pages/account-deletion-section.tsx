@@ -52,7 +52,7 @@ export function AccountDeletionSection() {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl">
             <h4 className="text-lg font-black tracking-tight">Confirm Account Deletion</h4>
             <p className="mt-2 text-sm text-muted-foreground">

@@ -66,7 +66,7 @@ export default function DashboardPage({
     <div className={cn("relative h-full w-full flex flex-col md:flex-row bg-background text-foreground overflow-hidden", className)} {...props}>
       
       {/* 1. Sidebar */}
-      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card/10 backdrop-blur-2xl relative z-20">
+      <aside className="hidden md:flex w-[300px] flex-col border-r border-border bg-card/10 backdrop-blur-2xl relative z-20">
         <div className="flex h-16 items-center px-6 border-b border-border/50">
           <InteractiveLogo />
         </div>
@@ -159,16 +159,16 @@ export default function DashboardPage({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 glass-card border-border mt-2 p-2 rounded-xl">
-                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-black uppercase text-muted-foreground/70">My Account</DropdownMenuLabel>
+                <DropdownMenuLabel inset className="text-muted-foreground/70">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-border/50" />
-                <DropdownMenuItem className="rounded-lg font-semibold focus:bg-primary/10 focus:text-primary cursor-pointer gap-2">
+                <DropdownMenuItem inset className="focus:bg-primary/10 focus:text-primary cursor-pointer gap-2">
                    <Home className="size-4" /> Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg font-semibold focus:bg-primary/10 focus:text-primary cursor-pointer gap-2">
+                <DropdownMenuItem inset className="focus:bg-primary/10 focus:text-primary cursor-pointer gap-2">
                    <Settings className="size-4" /> Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border/50" />
-                <DropdownMenuItem onClick={() => logout()} className="rounded-lg font-semibold text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer gap-2">
+                <DropdownMenuItem inset onClick={() => logout()} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer gap-2">
                    <LogOut className="size-4" /> Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -196,7 +196,7 @@ export default function DashboardPage({
                              <ShieldCheck className="size-3.5 text-primary" />
                           </CardTitle>
                        </CardHeader>
-                       <CardContent>
+                       <CardContent className="px-[var(--field-spine-indent)]">
                           <div className="text-3xl font-black tracking-tighter">98.4%</div>
                           <p className="text-[10px] text-emerald-500 font-bold mt-1">✓ Critical systems secured</p>
                        </CardContent>
@@ -211,7 +211,7 @@ export default function DashboardPage({
                              <Smartphone className="size-3.5 text-indigo-400" />
                           </CardTitle>
                        </CardHeader>
-                       <CardContent>
+                       <CardContent className="px-[var(--field-spine-indent)]">
                           <div className="text-3xl font-black tracking-tighter">01</div>
                           <p className="text-[10px] text-muted-foreground/60 font-medium mt-1">Current secure session</p>
                        </CardContent>
@@ -226,7 +226,7 @@ export default function DashboardPage({
                              <Activity className="size-3.5 text-amber-500" />
                           </CardTitle>
                        </CardHeader>
-                       <CardContent>
+                       <CardContent className="px-[var(--field-spine-indent)]">
                           <div className="text-3xl font-black tracking-tighter">142</div>
                           <p className="text-[10px] text-emerald-500 font-bold mt-1">↑ 12% from last week</p>
                        </CardContent>
@@ -241,7 +241,7 @@ export default function DashboardPage({
                              <Key className="size-3.5 text-muted-foreground" />
                           </CardTitle>
                        </CardHeader>
-                       <CardContent>
+                       <CardContent className="px-[var(--field-spine-indent)]">
                           <div className="text-3xl font-black tracking-tighter">256-bit</div>
                           <p className="text-[10px] text-muted-foreground/60 font-medium mt-1">SHA-256 standard</p>
                        </CardContent>
@@ -262,7 +262,7 @@ export default function DashboardPage({
                          </CardTitle>
                          <CardDescription className="text-xs">Your system-level identity details</CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-6">
+                      <CardContent className="space-y-6 px-[var(--field-spine-indent)]">
                          <div className="p-4 rounded-2xl bg-card/20 border border-border/50">
                             <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-1">Unique Identifier</div>
                             <div className="text-sm font-mono break-all font-semibold opacity-80">{user?.id || "6f9a2-b8c1-4d32-9e51-f76d432"}</div>
@@ -342,7 +342,7 @@ export default function DashboardPage({
                           </CardTitle>
                        </div>
                     </CardHeader>
-                    <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+                    <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4 px-[var(--field-spine-indent)]">
                        <div className="flex items-center gap-4 p-4 rounded-xl bg-card/20 border border-border/50 hover:border-primary/30 transition-colors cursor-pointer group">
                           <div className="size-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
                              <ShieldCheck className="size-5" />

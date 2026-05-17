@@ -148,7 +148,7 @@ export default function LoginForm({
             className="flex flex-col gap-8"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 pl-[var(--field-spine-indent)]">
               <h1 className="text-4xl font-black tracking-tighter">Log in</h1>
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}

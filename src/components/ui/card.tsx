@@ -32,7 +32,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-header"
       className={cn(
-        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-lg px-[var(--field-spine-indent)] group-data-[size=sm]/card:px-[var(--field-spine-indent)] has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-lg group-data-[size=sm]/card:px-0 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
         className
       )}
       {...props}
@@ -44,7 +44,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
-      className={cn("font-heading text-sm font-medium", className)}
+      className={cn("font-heading text-sm font-medium px-[var(--field-spine-indent)]", className)}
       {...props}
     />
   )
@@ -54,7 +54,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-xs/relaxed text-muted-foreground", className)}
+      className={cn("text-xs/relaxed text-muted-foreground px-[var(--field-spine-indent)]", className)}
       {...props}
     />
   )
@@ -77,7 +77,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-[var(--field-spine-indent)] group-data-[size=sm]/card:px-[var(--field-spine-indent)]", className)}
+      className={cn("px-0 group-data-[size=sm]/card:px-0", className)}
       {...props}
     />
   )
@@ -88,7 +88,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center rounded-b-lg px-[var(--field-spine-indent)] group-data-[size=sm]/card:px-[var(--field-spine-indent)] [.border-t]:pt-4 group-data-[size=sm]/card:[.border-t]:pt-3",
+        "flex items-center rounded-b-lg px-0 group-data-[size=sm]/card:px-0 [.border-t]:pt-4 group-data-[size=sm]/card:[.border-t]:pt-3",
         className
       )}
       {...props}

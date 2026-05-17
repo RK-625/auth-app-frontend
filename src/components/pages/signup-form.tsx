@@ -246,7 +246,7 @@ export function SignupForm({
                 {...stepTransition}
                 className="flex flex-col gap-8"
               >
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pl-[var(--field-spine-indent)]">
                   <h1 className="text-4xl font-black tracking-tighter">Create an account</h1>
                   <p className="text-sm text-muted-foreground">
                     Already have an account?{" "}
@@ -302,7 +302,7 @@ export function SignupForm({
                 className="flex flex-col gap-8"
                 onSubmit={handleStep2}
               >
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pl-[var(--field-spine-indent)]">
                   <h1 className="text-4xl font-black tracking-tighter">Check your email</h1>
                   <p className="text-sm text-muted-foreground flex items-center gap-1.5 flex-wrap">
                     Code sent to <span className="font-bold text-primary">{maskEmail(email)}</span>
@@ -369,7 +369,7 @@ export function SignupForm({
                 className="flex flex-col gap-8"
                 onSubmit={handleStep3}
               >
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pl-[var(--field-spine-indent)]">
                   <h1 className="text-4xl font-black tracking-tighter">Set your password</h1>
                   <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                     Create a strong password for your account

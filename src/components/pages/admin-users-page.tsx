@@ -294,7 +294,7 @@ export default function AdminUsersPage() {
       </Card>
 
       {selected && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className="w-full max-w-xl rounded-xl border border-border bg-card p-6">
             <h3 className="text-lg font-black">User Details</h3>
             <div className="mt-4 space-y-2 text-sm">
@@ -314,7 +314,7 @@ export default function AdminUsersPage() {
       )}
 
       {confirmDelete && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className="w-full max-w-md rounded-xl border border-destructive/40 bg-card p-6">
             <h3 className="text-lg font-black text-destructive">Confirm User Deletion</h3>
             <p className="mt-2 text-sm text-muted-foreground">
