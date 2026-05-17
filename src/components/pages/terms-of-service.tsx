@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 export function TermsOfService() {
   return (
     <div className="flex flex-col gap-6">
-      <Card>
+      <Card variant="glass">
         <CardContent className="p-8 md:p-12">
           <div className="space-y-6">
             <h1 className="text-3xl font-bold tracking-tight">

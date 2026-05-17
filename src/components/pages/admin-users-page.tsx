@@ -95,13 +95,24 @@ export default function AdminUsersPage() {
     return { total, active, oauth, admin }
   }, [users])
 
-  const onToggleEnabled = (target: AdminUser) => {
+  const onToggleEnabled = async (target: AdminUser) => {
+    const previous = users
+    const newStatus = !(target.enabled !== false)
+    
+    // Optimistic update
     setUsers((prev) =>
       prev.map((item) =>
-        item.id === target.id ? { ...item, enabled: !(item.enabled !== false) } : item
+        item.id === target.id ? { ...item, enabled: newStatus } : item
       )
     )
-    toast.success("Account status updated locally")
+
+    try {
+      await api.patch(`/admin/users/${target.id}`, { enabled: newStatus })
+      toast.success(`User ${newStatus ? 'enabled' : 'disabled'}`)
+    } catch (error) {
+      setUsers(previous)
+      toastApiError(error)
+    }
   }
 
   const onDeleteUser = async (target: AdminUser) => {
@@ -161,7 +172,7 @@ export default function AdminUsersPage() {
       <Card variant="glass">
         <CardHeader className="pb-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg font-black">
+            <CardTitle className="flex items-center gap-2 text-lg font-black uppercase tracking-tight">
               <Shield className="size-4" />
               User Management
             </CardTitle>
@@ -186,74 +197,77 @@ export default function AdminUsersPage() {
             <p className="text-sm text-muted-foreground">No users match this search.</p>
           ) : (
             <>
-              <div className="rounded-xl border border-border/50 overflow-hidden">
+              <div className="rounded-xl border border-border/50 overflow-hidden bg-card/5 backdrop-blur-sm">
                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Avatar</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Roles</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                  <TableHeader className="bg-card/20">
+                    <TableRow className="hover:bg-transparent border-border/50">
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest py-4">Avatar</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Name</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Email</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Provider</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Roles</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Created</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pagedUsers.map((item) => (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id} className="hover:bg-primary/5 border-border/20 transition-colors duration-500 ease-in-out">
                         <TableCell>
-                          <Avatar className="size-8">
+                          <Avatar className="size-8 border border-primary/20">
                             <AvatarImage src={item.image} />
-                            <AvatarFallback>{(item.name || item.email)[0]?.toUpperCase()}</AvatarFallback>
+                            <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{(item.name || item.email)[0]?.toUpperCase()}</AvatarFallback>
                           </Avatar>
                         </TableCell>
-                        <TableCell className="font-semibold">{item.name || "Unnamed"}</TableCell>
-                        <TableCell className="font-mono text-xs">{item.email}</TableCell>
+                        <TableCell className="font-bold text-xs">{item.name || "Unnamed"}</TableCell>
+                        <TableCell className="font-mono text-[10px] opacity-70">{item.email}</TableCell>
                         <TableCell>
-                          <Badge variant="outline">{item.provider || "local"}</Badge>
+                          <Badge variant="outline" className="text-[10px]">{item.provider || "local"}</Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {item.roles.map((role) => (
-                              <Badge key={role.name} className="text-[10px]">
+                              <Badge key={role.name} className="text-[9px] bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 px-1.5 py-0 font-black">
                                 {role.name.replace("ROLE_", "")}
                               </Badge>
                             ))}
                           </div>
                         </TableCell>
-                        <TableCell>{createdLabel(item.createdAt)}</TableCell>
+                        <TableCell className="text-[10px] font-semibold opacity-60">{createdLabel(item.createdAt)}</TableCell>
                         <TableCell>
-                          <Badge variant={item.enabled === false ? "destructive" : "secondary"}>
-                            {item.enabled === false ? "Disabled" : "Active"}
+                          <Badge variant={item.enabled === false ? "destructive" : "secondary"} className="text-[9px] font-black px-1.5 py-0">
+                            {item.enabled === false ? "DISABLED" : "ACTIVE"}
                           </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
                             <Button
                               variant="outline"
-                              size="sm"
+                              size="xs"
                               onClick={() => setSelected(item)}
+                              className="rounded-full"
                             >
-                              <Eye className="size-4" />
+                              <Eye className="size-3" />
                               View
                             </Button>
                             <Button
                               variant="outline"
-                              size="sm"
+                              size="xs"
                               onClick={() => onToggleEnabled(item)}
+                              className="rounded-full"
                             >
                               {item.enabled === false ? "Enable" : "Disable"}
                             </Button>
                             {isRoot && (
                               <Button
                                 variant="destructive"
-                                size="sm"
+                                size="xs"
                                 onClick={() => setConfirmDelete(item)}
                                 disabled={deletingId === item.id}
+                                className="rounded-full"
                               >
-                                <Trash2 className="size-4" />
+                                <Trash2 className="size-3" />
                                 Delete
                               </Button>
                             )}
@@ -266,23 +280,25 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="mt-4 flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                   Page {currentPage} of {pageCount}
                 </p>
                 <div className="flex gap-2">
                   <Button
-                    size="sm"
+                    size="xs"
                     variant="outline"
                     disabled={currentPage <= 1}
                     onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                    className="rounded-full"
                   >
                     Previous
                   </Button>
                   <Button
-                    size="sm"
+                    size="xs"
                     variant="outline"
                     disabled={currentPage >= pageCount}
                     onClick={() => setPage((prev) => Math.min(pageCount, prev + 1))}
+                    className="rounded-full"
                   >
                     Next
                   </Button>
@@ -295,45 +311,50 @@ export default function AdminUsersPage() {
 
       {selected && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-          <div className="w-full max-w-xl rounded-xl border border-border bg-card p-6">
-            <h3 className="text-lg font-black">User Details</h3>
+          <Card variant="glass" className="w-full max-w-xl p-6 overflow-visible">
+            <h3 className="text-lg font-black uppercase tracking-tight">User Details</h3>
             <div className="mt-4 space-y-2 text-sm">
-              <p><span className="font-semibold">ID:</span> {selected.id}</p>
-              <p><span className="font-semibold">Name:</span> {selected.name || "Unnamed"}</p>
-              <p><span className="font-semibold">Email:</span> {selected.email}</p>
-              <p><span className="font-semibold">Provider:</span> {selected.provider || "local"}</p>
-              <p><span className="font-semibold">Roles:</span> {selected.roles.map((r) => r.name).join(", ")}</p>
-              <p><span className="font-semibold">Created:</span> {selected.createdAt || "Unknown"}</p>
-              <p><span className="font-semibold">Status:</span> {selected.enabled === false ? "Disabled" : "Active"}</p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">ID:</span> <span className="font-mono">{selected.id}</span></p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Name:</span> {selected.name || "Unnamed"}</p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Email:</span> {selected.email}</p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Provider:</span> <Badge variant="outline" className="text-[10px]">{selected.provider || "local"}</Badge></p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Roles:</span> {selected.roles.map((r) => r.name.replace('ROLE_', '')).join(", ")}</p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Created:</span> {createdLabel(selected.createdAt)}</p>
+              <p><span className="font-bold text-muted-foreground/60 uppercase text-[10px] tracking-widest mr-2">Status:</span> 
+                <Badge variant={selected.enabled === false ? "destructive" : "secondary"} className="ml-1 text-[9px] font-black">
+                  {selected.enabled === false ? "DISABLED" : "ACTIVE"}
+                </Badge>
+              </p>
             </div>
-            <div className="mt-5 flex justify-end">
-              <Button variant="outline" onClick={() => setSelected(null)}>Close</Button>
+            <div className="mt-8 flex justify-end">
+              <Button variant="outline" onClick={() => setSelected(null)} className="rounded-full">Dismiss Handshake</Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
 
       {confirmDelete && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-          <div className="w-full max-w-md rounded-xl border border-destructive/40 bg-card p-6">
-            <h3 className="text-lg font-black text-destructive">Confirm User Deletion</h3>
+          <Card variant="glass" className="w-full max-w-md p-6 border-destructive/40 overflow-visible">
+            <h3 className="text-lg font-black uppercase tracking-tight text-destructive">Decommission User</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Delete user <span className="font-semibold text-foreground">{confirmDelete.email}</span>? This action cannot be undone.
+              Terminate identity <span className="font-bold text-foreground">{confirmDelete.email}</span>? This action is permanent and cannot be reversed.
             </p>
-            <div className="mt-5 flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setConfirmDelete(null)} disabled={deletingId === confirmDelete.id}>
-                Cancel
+            <div className="mt-8 flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setConfirmDelete(null)} disabled={deletingId === confirmDelete.id} className="rounded-full">
+                Abort
               </Button>
               <Button
                 variant="destructive"
                 loading={deletingId === confirmDelete.id}
-                loadingLabel="Deleting..."
+                loadingLabel="Decommissioning..."
                 onClick={() => onDeleteUser(confirmDelete)}
+                className="rounded-full"
               >
-                Delete User
+                Confirm Termination
               </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </div>

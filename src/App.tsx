@@ -120,30 +120,20 @@ function App() {
                     <Route
                       path="/admin/users"
                       element={
-                        <ProtectedRoute>
-                          <RoleProtectedRoute requiredRole="ROLE_ADMIN">
-                            <AdminUsersPage />
-                          </RoleProtectedRoute>
-                        </ProtectedRoute>
+                        <RoleProtectedRoute requiredRole="ROLE_ADMIN">
+                          <AdminUsersPage />
+                        </RoleProtectedRoute>
                       }
                     />
                     {import.meta.env.MODE === "development" && (
                       <Route
                         path="/design-system"
-                        element={
-                          <ProtectedRoute>
-                            <DesignSystemPage />
-                          </ProtectedRoute>
-                        }
+                        element={<DesignSystemPage />}
                       />
                     )}
                     <Route
                       path="/403"
-                      element={
-                        <ProtectedRoute>
-                          <ForbiddenPage />
-                        </ProtectedRoute>
-                      }
+                      element={<ForbiddenPage />}
                     />
                   </Routes>
                 </Suspense>

@@ -75,21 +75,21 @@ export default function DashboardPage({
           <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-3 px-3">Identity Ops</div>
           <Link
             to="/dashboard"
-            className="flex items-center gap-3 rounded-xl bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-all duration-300 border border-primary/20 shadow-[0_0_15px_rgba(236,72,153,0.05)]"
+            className="flex items-center gap-3 rounded-full bg-primary/10 px-4 py-3 text-sm font-bold text-primary transition-all duration-300 border border-primary/20 shadow-[0_0_15px_rgba(236,72,153,0.05)]"
           >
             <LayoutDashboard className="size-4" />
             Command Center
           </Link>
           <Link
             to="#"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
+            className="flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
           >
             <History className="size-4" />
             Audit Logs
           </Link>
           <Link
             to="/admin/users"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
+            className="flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
           >
             <ShieldCheck className="size-4" />
             Admin Users
@@ -98,7 +98,7 @@ export default function DashboardPage({
           <div className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70 mb-3 mt-8 px-3">Account</div>
           <Link
             to="#"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
+            className="flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold text-muted-foreground transition-all duration-300 hover:bg-card/40 hover:text-foreground border border-transparent hover:border-border"
           >
             <Settings className="size-4" />
             Settings
@@ -108,7 +108,7 @@ export default function DashboardPage({
         <div className="p-4 border-t border-border/50">
           <button
             onClick={() => logout()}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-muted-foreground transition-all duration-300 hover:bg-destructive/10 hover:text-destructive border border-transparent hover:border-destructive/20"
+            className="flex w-full items-center gap-3 rounded-full px-4 py-3 text-sm font-bold text-muted-foreground transition-all duration-300 hover:bg-destructive/10 hover:text-destructive border border-transparent hover:border-destructive/20"
           >
             <LogOut className="size-4" />
             Log out
@@ -129,15 +129,19 @@ export default function DashboardPage({
           </div>
           
           <div className="flex items-center gap-4 md:gap-6">
-            <div className="hidden lg:flex items-center gap-3 bg-input/30 border border-border rounded-full px-4 py-2 text-sm text-muted-foreground w-72 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40">
-              <Search className="size-4 opacity-40" />
-              <input type="text" placeholder="Search events..." className="bg-transparent border-none outline-none w-full text-foreground placeholder:text-muted-foreground/60" />
+            <div className="hidden lg:flex items-center gap-3 bg-input/30 border border-border rounded-full px-4 py-0 text-sm text-muted-foreground w-72 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40">
+              <Search className="size-4 opacity-40 ml-3" />
+              <Input 
+                type="text" 
+                placeholder="Search events..." 
+                className="bg-transparent border-none outline-none focus-visible:ring-0 focus-visible:border-none h-9 px-0" 
+              />
             </div>
             
-            <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-card/40">
+            <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground rounded-full">
               <Bell className="size-5" />
               <span className="absolute top-2 right-2 size-2 bg-primary rounded-full animate-glow" />
-            </button>
+            </Button>
 
             <ModeToggle />
 

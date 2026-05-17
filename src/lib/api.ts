@@ -57,6 +57,7 @@ const api = axios.create({
   withCredentials: true, // Crucial for Refresh Token (Stateful HttpOnly cookie)
   headers: {
     "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
 });
 
@@ -139,7 +140,11 @@ api.interceptors.response.use(
       }
     }
 
-    toastApiError(error);
+    // Skip global toast for 401s as they are either handled above or lead to logout
+    if (error.response?.status !== 401) {
+      toastApiError(error);
+    }
+
     return Promise.reject(error);
   }
 );
