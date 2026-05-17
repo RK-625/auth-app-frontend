@@ -50,7 +50,7 @@ export default function HomePage({ className, ...props }: React.ComponentProps<"
             <>
               <Button asChild size="lg" className="gap-2 px-8">
                 <Link to="/login">
-                  Get Started
+                  Log in
                   <ArrowRight className="size-4 transition-transform group-hover/button:translate-x-0.5" />
                 </Link>
               </Button>
