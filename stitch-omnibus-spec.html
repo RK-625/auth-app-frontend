@@ -28,6 +28,9 @@
       --error: oklch(62% 0.22 25);
       --success: oklch(72% 0.18 145);
 
+      /* Vertical Spine Alignment (Option 2) */
+      --field-spine-indent: 1.25rem;
+
       /* Typography */
       --font-hero: 'Space Grotesk', system-ui, sans-serif;
       --font-body: 'DM Sans', system-ui, sans-serif;
@@ -322,6 +325,28 @@
     .field-separator { position: relative; height: 1.25rem; display: flex; align-items: center; justify-content: center; }
     .field-separator::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: var(--border); opacity: 0.5; }
     .field-separator-text { position: relative; z-index: 1; background: var(--background); padding: 0 0.5rem; font-size: 0.65rem; color: var(--foreground); opacity: 0.4; font-family: var(--font-hero); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Interaction Standard: Center Expand */
+    .link-underline-center {
+      position: relative;
+      text-decoration: none !important;
+      transition: all 0.3s;
+    }
+    .link-underline-center::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1.5px;
+      bottom: -2px;
+      left: 0;
+      background-color: var(--primary);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.3s ease-out;
+    }
+    .link-underline-center:hover::after {
+      transform: scaleX(1);
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -630,26 +655,36 @@
 
       <!-- NEW: DROPDOWNS -->
       <section id="dropdowns">
-        <h2 class="section-h"><span class="glow-dot"></span>Dropdown Menus <span class="tag-new">New</span></h2>
+        <h2 class="section-h"><span class="glow-dot"></span>Dropdown Menus <span class="tag-new">Update</span></h2>
         <div class="dictionary-entry">
           <div class="entry-header">
-            <h3 class="font-hero" style="font-size:1.25rem;">Popovers & Menus</h3>
+            <h3 class="font-hero" style="font-size:1.25rem;">Icon Color Inheritance & Alignment</h3>
           </div>
           <div class="entry-body">
             <div>
-              <div class="dropdown-menu">
-                <div style="padding:0.4rem 0.75rem; font-size:0.7rem; opacity:0.5; font-family:var(--font-hero); text-transform:uppercase;">My Account</div>
-                <div style="height:1px; background:color-mix(in oklch, var(--foreground) 5%, transparent); margin:0.25rem -0.25rem;"></div>
-                <div class="dropdown-item">Profile</div>
-                <div class="dropdown-item">Team Settings</div>
-                <div style="height:1px; background:color-mix(in oklch, var(--foreground) 5%, transparent); margin:0.25rem -0.25rem;"></div>
-                <div class="dropdown-item destructive">Log out</div>
+              <div class="dropdown-menu" style="position:relative;">
+                <div style="position:absolute; top:0; bottom:0; left:1.25rem; width:1px; background:rgba(236,72,153,0.2); pointer-events:none;"></div>
+                <div style="padding:0.4rem 1.25rem; font-size:0.7rem; opacity:0.5; font-family:var(--font-hero); text-transform:uppercase;">My Account</div>
+                <div class="dropdown-separator"></div>
+                <div class="dropdown-item" style="color:var(--primary); background:color-mix(in oklch, var(--primary) 10%, transparent); padding-left:1.25rem;">
+                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:inherit;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                   Profile
+                </div>
+                <div class="dropdown-item" style="padding-left:1.25rem;">
+                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                   Settings
+                </div>
+                <div class="dropdown-separator"></div>
+                <div class="dropdown-item destructive" style="padding-left:1.25rem;">
+                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                   Log out
+                </div>
               </div>
             </div>
             <div class="rules-box">
-              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Rules</h4>
-              <span class="rule-do">✓ DO</span><p class="rule-text">Use extreme backdrop blur (<code>backdrop-blur-2xl</code>) to simulate frosted glass floating above the Z-0 layer.</p>
-              <span class="rule-do">✓ DO</span><p class="rule-text">Use the <code>destructive</code> variant for dangerous actions, which applies the Error token on hover.</p>
+              <h4 class="font-hero" style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Consistency Updates</h4>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Ensure icons use <code>color: inherit</code> so they synchronize with the text highlight (Pink) on hover.</p>
+              <span class="rule-do">✓ DO</span><p class="rule-text">Align all labels and items to the 1.25rem (20px) <b>Vertical Spine</b>.</p>
             </div>
           </div>
         </div>
@@ -687,9 +722,9 @@
           </div>
           <div class="split-right">
             <h3 class="font-hero" style="font-size:1.6rem; font-weight:700; margin-bottom:0.35rem;">Log in</h3>
-            <p style="font-size:0.85rem; opacity:0.6; margin-bottom:1.75rem;">Don't have an account? <span style="color:var(--primary); cursor:pointer;">Create an account</span></p>
-            <div class="input-wrapper"><label class="field-label">Email</label><input type="email" class="stitch-input"></div>
-            <div class="input-wrapper"><label class="field-label">Password</label><input type="password" class="stitch-input"></div>
+            <p style="font-size:0.85rem; opacity:0.6; margin-bottom:1.75rem;">Don't have an account? <span class="link-underline-center" style="color:var(--primary); cursor:pointer; font-weight:600;">Create an account</span></p>
+            <div class="input-wrapper"><label class="field-label" style="padding-left:1.25rem;">Email</label><input type="email" class="stitch-input" style="padding-left:1.25rem;"></div>
+            <div class="input-wrapper"><label class="field-label" style="padding-left:1.25rem;">Password</label><input type="password" class="stitch-input" style="padding-left:1.25rem;"></div>
             <button class="stitch-btn btn-primary" style="width:100%; height:3rem;">Log in</button>
           </div>
         </div>
