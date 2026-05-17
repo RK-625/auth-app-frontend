@@ -189,7 +189,7 @@ export default function DashboardPage({
               {/* Row 1: Key Metrics */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                  <motion.div variants={item}>
-                    <Card className="glass-card border-border border-l-4 border-l-primary/40 hover:scale-[1.02] transition-transform duration-300">
+                    <Card variant="glass" className="border-border border-l-4 border-l-primary/40 hover:scale-[1.02] transition-transform duration-300">
                        <CardHeader className="pb-2 space-y-0">
                           <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between">
                              Security Score
@@ -204,7 +204,7 @@ export default function DashboardPage({
                  </motion.div>
 
                  <motion.div variants={item}>
-                    <Card className="glass-card border-border border-l-4 border-l-indigo-500/40 hover:scale-[1.02] transition-transform duration-300">
+                    <Card variant="glass" className="border-border border-l-4 border-l-indigo-500/40 hover:scale-[1.02] transition-transform duration-300">
                        <CardHeader className="pb-2 space-y-0">
                           <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between">
                              Active Sessions
@@ -219,7 +219,7 @@ export default function DashboardPage({
                  </motion.div>
 
                  <motion.div variants={item}>
-                    <Card className="glass-card border-border border-l-4 border-l-amber-500/40 hover:scale-[1.02] transition-transform duration-300">
+                    <Card variant="glass" className="border-border border-l-4 border-l-amber-500/40 hover:scale-[1.02] transition-transform duration-300">
                        <CardHeader className="pb-2 space-y-0">
                           <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between">
                              Audit Events
@@ -234,7 +234,7 @@ export default function DashboardPage({
                  </motion.div>
 
                  <motion.div variants={item}>
-                    <Card className="glass-card border-border border-l-4 border-l-muted-foreground/40 hover:scale-[1.02] transition-transform duration-300">
+                    <Card variant="glass" className="border-border border-l-4 border-l-muted-foreground/40 hover:scale-[1.02] transition-transform duration-300">
                        <CardHeader className="pb-2 space-y-0">
                           <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between">
                              Key Strength
@@ -254,7 +254,7 @@ export default function DashboardPage({
                 
                 {/* Left: Account Identity */}
                 <motion.div variants={item} className="lg:col-span-1">
-                   <Card className="glass-card h-full border-border">
+                   <Card variant="glass" className="h-full border-border">
                       <CardHeader>
                          <CardTitle className="text-xl font-black tracking-tight flex items-center gap-2">
                             <Fingerprint className="size-5 text-primary" />
@@ -281,7 +281,7 @@ export default function DashboardPage({
 
                 {/* Center/Right: Activity Log */}
                 <motion.div variants={item} className="lg:col-span-2">
-                   <Card className="glass-card h-full border-border">
+                   <Card variant="glass" className="h-full border-border">
                       <CardHeader className="flex flex-row items-center justify-between">
                          <div className="space-y-1">
                             <CardTitle className="text-xl font-black tracking-tight flex items-center gap-2">
@@ -333,7 +333,7 @@ export default function DashboardPage({
 
               {/* Row 3: Account Security */}
               <motion.div variants={item}>
-                 <Card className="glass-card border-border border-t-4 border-t-emerald-500/40">
+                 <Card variant="glass" className="border-border border-t-4 border-t-emerald-500/40">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                        <div className="space-y-1">
                           <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">

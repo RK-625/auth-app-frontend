@@ -67,7 +67,7 @@ export function PasswordChangeSection() {
               id="current-password"
               type="password"
               autoComplete="current-password"
-              className="minimal-input h-11"
+              className="h-11"
               {...form.register("currentPassword")}
             />
             <FieldError errors={[form.formState.errors.currentPassword]} />
@@ -78,7 +78,7 @@ export function PasswordChangeSection() {
               id="new-password"
               type="password"
               autoComplete="new-password"
-              className="minimal-input h-11"
+              className="h-11"
               {...form.register("newPassword")}
             />
             <FieldError errors={[form.formState.errors.newPassword]} />
@@ -89,7 +89,7 @@ export function PasswordChangeSection() {
               id="confirm-new-password"
               type="password"
               autoComplete="new-password"
-              className="minimal-input h-11"
+              className="h-11"
               {...form.register("confirmNewPassword")}
             />
             <FieldError errors={[form.formState.errors.confirmNewPassword]} />

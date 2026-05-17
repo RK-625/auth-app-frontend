@@ -2,20 +2,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { 
   Search, 
-  Shield, 
   Trash2, 
-  Check, 
-  AlertCircle, 
-  Loader2,
   Mail,
   Lock,
   ArrowRight
 } from "lucide-react"
-import { AuthLoadingScreen } from "@/components/auth-loading-screen"
 import { GlowDecoration } from "@/components/glow-decoration"
 import { FallingPattern } from "@/components/falling-pattern"
 import { InteractiveLogo } from "@/components/ui/logo"
@@ -110,18 +105,18 @@ export default function DesignSystemPage() {
                 <FieldLabel>Email Address</FieldLabel>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 opacity-40" />
-                  <Input placeholder="name@example.com" className="pl-10 h-11 minimal-input" />
+                  <Input placeholder="name@example.com" className="pl-10 h-11" />
                 </div>
                 <FieldErrorSlot />
               </Field>
 
-              <FieldSeparator text="or" />
+              <FieldSeparator>or</FieldSeparator>
 
               <Field>
                 <FieldLabel>Security Key</FieldLabel>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 opacity-40" />
-                  <Input type="password" placeholder="••••••••" className="pl-10 h-11 minimal-input" />
+                  <Input type="password" placeholder="••••••••" className="pl-10 h-11" />
                 </div>
                 <FieldErrorSlot errors={[{ message: "Complexity requirements not met" }]} />
               </Field>
@@ -137,7 +132,7 @@ export default function DesignSystemPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="glass-card overflow-hidden h-[300px]">
+          <Card variant="glass" className="overflow-hidden h-[300px]">
              <FallingPattern />
              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <Badge className="bg-primary/20 backdrop-blur-md">Falling Pattern Preview</Badge>

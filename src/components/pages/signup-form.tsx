@@ -272,7 +272,7 @@ export function SignupForm({
                         required
                         autoComplete="email"
                         autoFocus
-                        className="minimal-input h-12"
+                        className="h-12"
                       />
                       <FieldErrorSlot>
                         <FieldError errors={[form.formState.errors.email]} />
@@ -285,7 +285,7 @@ export function SignupForm({
                         loading={loading}
                         loadingLabel="Sending..."
                         size="lg"
-                        className="w-full font-bold hover:animate-glow"
+                        className="w-full font-bold"
                       >
                         Create account
                       </Button>
@@ -345,7 +345,7 @@ export function SignupForm({
                       loading={loading}
                       loadingLabel="Verifying..."
                       size="lg"
-                      className="w-full font-bold hover:animate-glow"
+                      className="w-full font-bold"
                     >
                       Verify code
                     </Button>
@@ -397,7 +397,7 @@ export function SignupForm({
                         required
                         autoComplete="new-password"
                         autoFocus
-                        className="minimal-input h-12 pr-10"
+                        className="h-12 pr-10"
                       />
                       <button
                         type="button"
@@ -443,7 +443,7 @@ export function SignupForm({
                         {...form.register("confirmPassword")}
                         required
                         autoComplete="new-password"
-                        className="minimal-input h-12 pr-10"
+                        className="h-12 pr-10"
                       />
                       <button
                         type="button"
@@ -475,7 +475,7 @@ export function SignupForm({
                       loading={loading}
                       loadingLabel="Creating..."
                       size="lg"
-                      className="w-full font-bold hover:animate-glow"
+                      className="w-full font-bold"
                     >
                       Set password
                     </Button>

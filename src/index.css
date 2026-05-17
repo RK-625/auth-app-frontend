@@ -112,10 +112,6 @@ body {
     }
   }
   
-  .minimal-input {
-    @apply bg-input/50 border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all duration-500 rounded-xl;
-  }
-
   .link-underline-center {
     @apply relative no-underline transition-all duration-300;
     &::after {

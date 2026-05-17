@@ -178,7 +178,7 @@ export default function LoginForm({
                   placeholder="Enter your email"
                   {...form.register("email")}
                   autoComplete="email"
-                  className="minimal-input h-12"
+                  className="h-12"
                 />
                 <FieldErrorSlot>
                   <FieldError errors={[form.formState.errors.email]} />
@@ -207,7 +207,7 @@ export default function LoginForm({
                     placeholder="Enter your password"
                     {...form.register("password")}
                     autoComplete="current-password"
-                    className="pr-10 minimal-input h-12"
+                    className="pr-10 h-12"
                   />
                   <button
                     type="button"
@@ -236,7 +236,7 @@ export default function LoginForm({
                   loading={loading}
                   loadingLabel="Logging in..."
                   size="lg"
-                  className="w-full font-bold hover:animate-glow"
+                  className="w-full font-bold"
                 >
                   Log in
                 </Button>

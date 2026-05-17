@@ -132,25 +132,25 @@ export default function AdminUsersPage() {
   return (
     <div className="mx-auto w-full max-w-[1400px] space-y-6">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card>
+        <Card variant="glass">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">Total Users</CardTitle>
           </CardHeader>
           <CardContent className="text-2xl font-black">{stats.total}</CardContent>
         </Card>
-        <Card>
+        <Card variant="glass">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">Active Users</CardTitle>
           </CardHeader>
           <CardContent className="text-2xl font-black">{stats.active}</CardContent>
         </Card>
-        <Card>
+        <Card variant="glass">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">OAuth Users</CardTitle>
           </CardHeader>
           <CardContent className="text-2xl font-black">{stats.oauth}</CardContent>
         </Card>
-        <Card>
+        <Card variant="glass">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">Admin Users</CardTitle>
           </CardHeader>
@@ -158,7 +158,7 @@ export default function AdminUsersPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card variant="glass">
         <CardHeader className="pb-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <CardTitle className="flex items-center gap-2 text-lg font-black">

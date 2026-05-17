@@ -89,7 +89,7 @@ export function OtpInput({
           onKeyDown={(event) => handleKeyDown(index, event)}
           onPaste={handlePaste}
           className={cn(
-            "h-14 w-11 rounded-xl border bg-input/50 text-center text-lg font-mono font-semibold transition-colors outline-none",
+            "h-14 w-11 rounded-xl border bg-input/50 text-center text-lg font-mono font-semibold transition-all duration-500 outline-none",
             "focus:border-primary/50 focus:ring-4 focus:ring-primary/10",
             disabled && "cursor-not-allowed opacity-60",
             error

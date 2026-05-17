@@ -45,8 +45,9 @@ Stitch Identity is a high-performance, minimalist authentication platform design
 ### Component Organization
 - **`src/components/ui`**: Base UI components.
     - `OtpInput.tsx`: Standardized OTP entry.
-    - `button.tsx`: Owns pill shapes and brand-magenta focus/glow.
-    - `card.tsx`: Uses `variant="glass"` for surfaces.
+    - `button.tsx`: Owns pill shapes and brand-magenta focus/glow treatment (pulsing `animate-glow` on focus).
+    - `input.tsx`: Implements the "minimal" design by default (500ms transitions, `bg-input/50`).
+    - `card.tsx`: Exposes `variant="glass"` for surfaces with backdrop blur and gradients.
     - `field.tsx`: Use `FieldErrorSlot` for form validation to preserve card height.
 - **`src/components/pages`**: View components.
     - Password Change/Session Management/Account Deletion are mounted in dashboard security.

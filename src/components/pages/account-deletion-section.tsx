@@ -63,7 +63,7 @@ export function AccountDeletionSection() {
               value={confirmEmail}
               onChange={(event) => setConfirmEmail(event.target.value)}
               placeholder="Enter your email"
-              className="minimal-input mt-4 h-11"
+              className="mt-4 h-11"
               autoComplete="email"
               disabled={loading}
             />

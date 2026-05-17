@@ -272,7 +272,7 @@ export default function ForgetPage({
                         required
                         autoComplete="email"
                         autoFocus
-                        className="minimal-input h-12"
+                        className="h-12"
                       />
                       <FieldErrorSlot>
                         <FieldError errors={[form.formState.errors.email]} />
@@ -285,7 +285,7 @@ export default function ForgetPage({
                         loading={loading}
                         loadingLabel="Sending..."
                         size="lg"
-                        className="w-full font-bold hover:animate-glow"
+                        className="w-full font-bold"
                       >
                         Send reset code
                       </Button>
@@ -345,7 +345,7 @@ export default function ForgetPage({
                       loading={loading}
                       loadingLabel="Verifying..."
                       size="lg"
-                      className="w-full font-bold hover:animate-glow"
+                      className="w-full font-bold"
                     >
                       Verify code
                     </Button>
@@ -397,7 +397,7 @@ export default function ForgetPage({
                         required
                         autoComplete="new-password"
                         autoFocus
-                        className="pr-10 minimal-input h-12"
+                        className="pr-10 h-12"
                       />
                       <button
                         type="button"
@@ -431,7 +431,7 @@ export default function ForgetPage({
                         {...form.register("confirmPassword")}
                         required
                         autoComplete="new-password"
-                        className="pr-10 minimal-input h-12"
+                        className="pr-10 h-12"
                       />
                       <button
                         type="button"
@@ -459,7 +459,7 @@ export default function ForgetPage({
                       loading={loading}
                       loadingLabel="Updating..."
                       size="lg"
-                      className="w-full font-bold hover:animate-glow"
+                      className="w-full font-bold"
                     >
                       Reset password
                     </Button>
