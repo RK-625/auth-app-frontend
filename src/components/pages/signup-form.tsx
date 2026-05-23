@@ -426,7 +426,7 @@ export function SignupForm({
                             ? "✓ Strong enough"
                             : password.length < 6
                               ? `${6 - password.length} more characters needed`
-                              : "Too long (max 15)"}
+                              : "Too long (max 72)"}
                         </p>
                       )}
                     </FieldErrorSlot>

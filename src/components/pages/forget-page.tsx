@@ -414,7 +414,7 @@ export default function ForgetPage({
                           "text-[11px] font-bold transition-colors",
                           !form.formState.errors.password ? "text-emerald-500" : "text-muted-foreground/60"
                         )}>
-                          {!form.formState.errors.password ? "✓ Strong enough" : password.length < 6 ? `${6 - password.length} more characters needed` : "Too long (max 15)"}
+                          {!form.formState.errors.password ? "✓ Strong enough" : password.length < 6 ? `${6 - password.length} more characters needed` : "Too long (max 72)"}
                         </p>
                       )}
                     </FieldErrorSlot>
