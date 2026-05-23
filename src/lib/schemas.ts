@@ -26,11 +26,10 @@ export const changePasswordSchema = z.object({
 
 export const signupSchema = z.object({
   email: emailSchema,
-  otp: z.string().length(6, "Code must be 6 digits").optional().or(z.literal("")),
-  password: z.string().optional().or(z.literal("")),
-  confirmPassword: z.string().optional().or(z.literal("")),
+  otp: z.string().length(6, "Code must be 6 digits").optional(),
+  password: z.string().optional(),
+  confirmPassword: z.string().optional(),
 }).refine((data) => {
-  // Only validate matching if both are provided (Step 3)
   if (data.password && data.confirmPassword) {
     return data.password === data.confirmPassword;
   }
@@ -39,8 +38,7 @@ export const signupSchema = z.object({
   message: "Passwords don't match",
   path: ["confirmPassword"],
 }).refine((data) => {
-    // Manually apply password rules if password is provided
-    if (data.password && data.password.length > 0) {
+    if (typeof data.password === "string") {
         return data.password.length >= 6 && data.password.length <= 15;
     }
     return true;

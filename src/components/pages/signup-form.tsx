@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import api from "@/lib/api"
 import { toast } from "sonner"
-import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import signupImg from "@/assets/signup_img.png"
 import signupImgLight from "@/assets/signup_img_light.jpeg"
 import { signupSchema } from "@/lib/schemas"
@@ -27,11 +27,11 @@ import { toastApiError } from "@/lib/toast-api-error"
 
 import { InteractiveLogo } from "@/components/ui/logo"
 
-const stepTransition: HTMLMotionProps<"form"> = {
+const stepTransition = {
   initial: { opacity: 0, x: 16 },
   animate: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: -16 },
-  transition: { duration: 0.2, ease: [0.25, 1, 0.5, 1] },
+  transition: { duration: 0.2, ease: [0.25, 1, 0.5, 1] as const },
 }
 
 export function SignupForm({

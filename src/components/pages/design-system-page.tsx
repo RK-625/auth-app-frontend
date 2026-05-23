@@ -18,6 +18,7 @@ import {
   Field, 
   FieldLabel, 
   FieldErrorSlot, 
+  FieldError,
   FieldGroup,
   FieldSeparator
 } from "@/components/ui/field"
@@ -118,7 +119,9 @@ export default function DesignSystemPage() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 opacity-40" />
                   <Input type="password" placeholder="••••••••" className="pl-10 h-11" />
                 </div>
-                <FieldErrorSlot errors={[{ message: "Complexity requirements not met" }]} />
+                <FieldErrorSlot>
+                  <FieldError errors={[{ message: "Complexity requirements not met" }]} />
+                </FieldErrorSlot>
               </Field>
            </FieldGroup>
         </div>

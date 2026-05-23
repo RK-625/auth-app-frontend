@@ -16,6 +16,8 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { InteractiveLogo } from "@/components/ui/logo"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useAuth } from "@/components/auth-context"
 import { ModeToggle } from "@/components/mode-toggle"
 import { motion, type Variants } from "framer-motion"

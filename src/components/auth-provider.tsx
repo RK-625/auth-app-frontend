@@ -6,6 +6,7 @@ import api, {
   type AuthTokenRefreshedEvent,
 } from "@/lib/api";
 import { toastApiError } from "@/lib/toast-api-error";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth-context";
 import type { User } from "@/components/auth-context";
@@ -43,11 +44,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
              }
           }
        } catch {
-          // Silent failure on bootstrap if refresh token is invalid/expired
           if (isMounted) {
+            toast.error("Your session has expired. Please log in again.");
             setApiAccessToken(null);
             setAccessToken(null);
             setUser(null);
+            navigate("/login", { replace: true });
           }
        } finally {
           if (isMounted) setIsLoading(false);
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen for unauthorized events dispatched by the API interceptor
