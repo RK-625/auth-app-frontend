@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import api from "@/lib/api"
 import { useAuth } from "@/components/auth-context"
 import { AuthLoadingScreen } from "@/components/auth-loading-screen"
@@ -15,12 +15,32 @@ function extractApiMessage(error: unknown) {
 
 export default function OAuth2RedirectPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { login } = useAuth()
 
   useEffect(() => {
     let isMounted = true
 
     const completeOAuthLogin = async () => {
+      const searchParams = new URLSearchParams(location.search)
+      const errorParam = searchParams.get("error")
+
+      if (errorParam === "disabled") {
+        navigate("/login", {
+          replace: true,
+          state: { error: "Your account has been disabled. Please contact support." },
+        })
+        return
+      }
+
+      if (errorParam === "oauth2_failure") {
+        navigate("/login", {
+          replace: true,
+          state: { error: "OAuth2 login failed. Please try again." },
+        })
+        return
+      }
+
       const hasSessionHint = document.cookie.includes("logged_in=true")
       if (!hasSessionHint) {
         navigate("/login", {
@@ -57,7 +77,7 @@ export default function OAuth2RedirectPage() {
     return () => {
       isMounted = false
     }
-  }, [login, navigate])
+  }, [login, navigate, location.search])
 
   return <AuthLoadingScreen message="Completing sign in..." />
 }
